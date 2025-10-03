@@ -1541,7 +1541,7 @@ local fake_module_scripts = {}
 
 
 
-local function AXFHMJM_fake_script()
+local function GGTJTQ_fake_script()
     local script = Instance.new("LocalScript")
     script.Name = "UIHandler"
     script.Parent = Converted["_Riftcore"]
@@ -2853,6 +2853,7 @@ local function AXFHMJM_fake_script()
 			end
 		}
 	end
+	return CreateWindow
 end
 
-return AXFHMJM_fake_script()
+return GGTJTQ_fake_script()
