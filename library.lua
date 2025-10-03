@@ -1,4 +1,6 @@
+-- Generated using RoadToGlory's Converter v1.1 (RoadToGlory#9879)
 
+-- Instances:
 
 local Converted = {
 	["_Riftcore"] = Instance.new("ScreenGui");
@@ -168,6 +170,7 @@ local Converted = {
 	["_UICorner10"] = Instance.new("UICorner");
 }
 
+-- Properties:
 
 Converted["_Riftcore"].IgnoreGuiInset = true
 Converted["_Riftcore"].ScreenInsets = Enum.ScreenInsets.DeviceSafeInsets
@@ -1536,9 +1539,14 @@ Converted["_UIGradient24"].Parent = Converted["_MobileToggle"]
 Converted["_UICorner10"].CornerRadius = UDim.new(0, 11)
 Converted["_UICorner10"].Parent = Converted["_MobileToggle"]
 
+-- Fake Module Scripts:
+
 local fake_module_scripts = {}
 
-local function GGTJTQ_fake_script()
+
+-- Fake Local Scripts:
+
+local function CAPDRYK_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
     local script = Instance.new("LocalScript")
     script.Name = "UIHandler"
     script.Parent = Converted["_Riftcore"]
@@ -1562,10 +1570,12 @@ local function GGTJTQ_fake_script()
 	local WindowName = Top.WindowTitle
 	local LeftPanel = sections.Background.SideTab
 	
+	--// Misc
 	local Seperator = sections.Seperator
 	local VersionTitle = Bottom.Version
 	local StatusTitle = Bottom.Status
 	
+	--// Elements
 	local Elements = {
 		Window = bg,
 		FeaturesWindow = bg.Elements.FeaturesWindow,
@@ -2151,12 +2161,12 @@ local function GGTJTQ_fake_script()
 	
 					local function updateSelectedText()
 						if #selectedValues == 0 then
-							selectedItem.Text = "
+							selectedItem.Text = "--"  
 						else
 							local displayText = {}
 							for _, value in ipairs(selectedValues) do
 								if value == "0" then
-									table.insert(displayText, "
+									table.insert(displayText, "--")  
 								else
 									table.insert(displayText, value)
 								end
@@ -2756,11 +2766,11 @@ local function GGTJTQ_fake_script()
 				})
 	
 				setting_themes_section:AddInput({
-					Default = '
+					Default = '--',
 					Numeric = true,
 					Finished = false,
 					Text = 'Theme name',
-					Placeholder = '
+					Placeholder = '--',
 					Callback = function(state)
 						print(state)
 					end
@@ -2798,11 +2808,11 @@ local function GGTJTQ_fake_script()
 				})
 	
 				setting_configs_section:AddInput({
-					Default = '
+					Default = '--',
 					Numeric = true,
 					Finished = false,
 					Text = 'Config name',
-					Placeholder = '
+					Placeholder = '--',
 					Callback = function(state)
 						print(state)
 					end
@@ -2850,7 +2860,7 @@ local function GGTJTQ_fake_script()
 			end
 		}
 	end
-	return CreateWindow
+return CreateWindow
 end
 
-return GGTJTQ_fake_script()
+return CAPDRYK_fake_script()
