@@ -1546,7 +1546,7 @@ local fake_module_scripts = {}
 
 -- Fake Local Scripts:
 
-local function FBJD_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
+local function URDIUE_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
     local script = Instance.new("LocalScript")
     script.Name = "UIHandler"
     script.Parent = Converted["_Riftcore"]
@@ -1863,6 +1863,12 @@ local function FBJD_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					local newButton = Elements.Button:Clone()
 					newButton.Visible = true
 					newButton.Parent = self.Instance
+	
+					if wrappedSection._sizeConnection then
+						newButton:GetPropertyChangedSignal("Visible"):Connect(function()
+							wrappedSection:updateObjectAreaSize()
+						end)
+					end
 					newButton.Button.Text = title
 	
 					local originalSize = newButton.Button.Size
@@ -1902,6 +1908,12 @@ local function FBJD_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					local newToggle = Elements.Toggle:Clone()
 					newToggle.Visible = true
 					newToggle.Parent = self.Instance
+	
+					if wrappedSection._sizeConnection then
+						newToggle:GetPropertyChangedSignal("Visible"):Connect(function()
+							wrappedSection:updateObjectAreaSize()
+						end)
+					end
 					newToggle.Title.Text = title
 	
 					local isOn = defaultState
@@ -2020,6 +2032,12 @@ local function FBJD_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					local newSlider = Elements.Slider:Clone()
 					newSlider.Visible = true
 					newSlider.Parent = self.Instance
+	
+					if wrappedSection._sizeConnection then
+						newSlider:GetPropertyChangedSignal("Visible"):Connect(function()
+							wrappedSection:updateObjectAreaSize()
+						end)
+					end
 					newSlider.Title.Text = title
 					newSlider.Title.TextColor3 = Color3.fromRGB(128, 128, 128)
 	
@@ -2117,6 +2135,12 @@ local function FBJD_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					local newInputbox = Elements.Inputbox:Clone()
 					newInputbox.Visible = true
 					newInputbox.Parent = self.Instance
+	
+					if wrappedSection._sizeConnection then
+						newInputbox:GetPropertyChangedSignal("Visible"):Connect(function()
+							wrappedSection:updateObjectAreaSize()
+						end)
+					end
 					newInputbox.Title.Text = title
 					newInputbox.Title.TextColor3 = Color3.fromRGB(128, 128, 128)
 					local textBox = newInputbox.TextBox  
@@ -2166,6 +2190,12 @@ local function FBJD_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					local newDropdown = Elements.Dropdown:Clone()
 					newDropdown.Visible = true
 					newDropdown.Parent = self.Instance
+	
+					if wrappedSection._sizeConnection then
+						newDropdown:GetPropertyChangedSignal("Visible"):Connect(function()
+							wrappedSection:updateObjectAreaSize()
+						end)
+					end
 					newDropdown.Title.Text = title
 					newDropdown.Title.TextColor3 = Color3.fromRGB(128, 128, 128)
 	
@@ -2294,6 +2324,12 @@ local function FBJD_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					local newSeperator = Elements.Seperator:Clone()
 					newSeperator.Visible = true
 					newSeperator.Parent = self.Instance
+	
+					if wrappedSection._sizeConnection then
+						newSeperator:GetPropertyChangedSignal("Visible"):Connect(function()
+							wrappedSection:updateObjectAreaSize()
+						end)
+					end
 					newSeperator.Title.Text = title
 	
 					return newSeperator
@@ -2313,6 +2349,12 @@ local function FBJD_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					local newKeybind = Elements.KeybindWidget:Clone()
 					newKeybind.Visible = true
 					newKeybind.Parent = options.Parent or self.Instance
+	
+					if wrappedSection._sizeConnection then
+						newKeybind:GetPropertyChangedSignal("Visible"):Connect(function()
+							wrappedSection:updateObjectAreaSize()
+						end)
+					end
 	
 					local keyTextBox = newKeybind 
 					keyTextBox.Text = defaultKey
@@ -2465,6 +2507,12 @@ local function FBJD_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					local newColorPicker = Elements.ColorWidget:Clone()
 					newColorPicker.Visible = true
 					newColorPicker.Parent = options.Parent or self.Instance
+	
+					if wrappedSection._sizeConnection then
+						newColorPicker:GetPropertyChangedSignal("Visible"):Connect(function()
+							wrappedSection:updateObjectAreaSize()
+						end)
+					end
 	
 					local newColorWindow = Elements.ColorPickerWindow:Clone()
 					local rgbInput = newColorWindow:FindFirstChild("RgbInput")
@@ -2882,8 +2930,6 @@ local function FBJD_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 			end
 		}
 	end
-	
-return CreateWindow
 end
 
-return FBJD_fake_script()
+return URDIUE_fake_script()
