@@ -2930,6 +2930,7 @@ local function URDIUE_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandle
 			end
 		}
 	end
+	return CreateWindow
 end
 
 return URDIUE_fake_script()
