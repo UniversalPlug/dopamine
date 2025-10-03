@@ -1536,10 +1536,7 @@ Converted["_UIGradient24"].Parent = Converted["_MobileToggle"]
 Converted["_UICorner10"].CornerRadius = UDim.new(0, 11)
 Converted["_UICorner10"].Parent = Converted["_MobileToggle"]
 
-
 local fake_module_scripts = {}
-
-
 
 local function GGTJTQ_fake_script()
     local script = Instance.new("LocalScript")
