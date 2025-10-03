@@ -988,7 +988,7 @@ Converted["_DropDownBG"].BorderSizePixel = 0
 Converted["_DropDownBG"].Position = UDim2.new(0.045282051, 0, 0.00140774297, 0)
 Converted["_DropDownBG"].Size = UDim2.new(0, 231, 0, 42)
 Converted["_DropDownBG"].Visible = false
-Converted["_DropDownBG"].ZIndex = 44
+Converted["_DropDownBG"].ZIndex = 999999999
 Converted["_DropDownBG"].Name = "DropDownBG"
 Converted["_DropDownBG"].Parent = Converted["_Elements"]
 
@@ -1027,6 +1027,7 @@ Converted["_Dropdown"].BorderColor3 = Color3.fromRGB(0, 0, 0)
 Converted["_Dropdown"].BorderSizePixel = 0
 Converted["_Dropdown"].Position = UDim2.new(-0.00192431745, 0, 0.460578561, 0)
 Converted["_Dropdown"].Size = UDim2.new(0, 231, 0, 18)
+Converted["_Dropdown"].ZIndex = 999999999
 Converted["_Dropdown"].Name = "Dropdown"
 Converted["_Dropdown"].Parent = Converted["_DropDownBG"]
 
@@ -1061,6 +1062,7 @@ Converted["_ScrollingFrame"].BorderSizePixel = 0
 Converted["_ScrollingFrame"].Position = UDim2.new(0, 0, 1, 0)
 Converted["_ScrollingFrame"].Size = UDim2.new(0, 231, 0, 126)
 Converted["_ScrollingFrame"].Visible = false
+Converted["_ScrollingFrame"].ZIndex = 999999999
 Converted["_ScrollingFrame"].Parent = Converted["_Dropdown"]
 
 Converted["_UIListLayout7"].Padding = UDim.new(0.00100000005, 0)
@@ -1546,7 +1548,7 @@ local fake_module_scripts = {}
 
 -- Fake Local Scripts:
 
-local function URDIUE_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
+local function WSHA_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
     local script = Instance.new("LocalScript")
     script.Name = "UIHandler"
     script.Parent = Converted["_Riftcore"]
@@ -1615,6 +1617,7 @@ local function URDIUE_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandle
 	local Tabs = {}
 	local SubTabs = {}
 	local ChildWindows = {}
+	local ActiveDropdowns = {}
 	
 	local function MakeUIDraggable(dragObject, dragArea)
 		local dragging
@@ -2232,10 +2235,45 @@ local function URDIUE_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandle
 					end
 	
 					local function toggleDropdown()
+						if not isOpen then
+							for _, dropdown in pairs(ActiveDropdowns) do
+								if dropdown and dropdown.Parent then
+									local dropdownList = dropdown:FindFirstChild("Dropdown"):FindFirstChild("ScrollingFrame")
+									local status = dropdown:FindFirstChild("Status")
+									if dropdownList and status then
+										dropdownList.Visible = false
+										status.Text = "+"
+										dropdown.ZIndex = 1
+										dropdownList.ZIndex = 1
+										local title = dropdown:FindFirstChild("Title")
+										if title then
+											title.TextColor3 = Color3.fromRGB(128, 128, 128)
+										end
+									end
+								end
+							end
+							ActiveDropdowns = {}
+						end
+	
 						isOpen = not isOpen
 						dropdownList.Visible = isOpen
 						status.Text = isOpen and "-" or "+"
 						updateTitleColor(isOpen)
+	
+						if isOpen then
+							table.insert(ActiveDropdowns, newDropdown)
+							newDropdown.ZIndex = 9999
+							dropdownList.ZIndex = 9999
+						else
+							for i, dropdown in ipairs(ActiveDropdowns) do
+								if dropdown == newDropdown then
+									table.remove(ActiveDropdowns, i)
+									break
+								end
+							end
+							newDropdown.ZIndex = 1
+							dropdownList.ZIndex = 1
+						end
 					end
 	
 					toggleButton.MouseButton1Click:Connect(function()
@@ -2933,4 +2971,4 @@ local function URDIUE_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandle
 	return CreateWindow
 end
 
-return URDIUE_fake_script()
+return WSHA_fake_script()
