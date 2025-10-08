@@ -3361,7 +3361,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					end
 				})
 	
-				setting_configs_section:AddDropdown({
+				local configDropdown = setting_configs_section:AddDropdown({
                     Values = getConfigs(),
                     Default = "",
                     Multi = false,
@@ -3370,7 +3370,11 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
                         SelectedConfigName = state[1] or ""
                         print("Selected config: " .. tostring(SelectedConfigName))
                     end
-                })                
+                })
+                
+                local function refreshConfigList()
+                    configDropdown:UpdateOptions(getConfigs())
+                end                
 		
 				setting_configs_section:AddButton({
 					Text = "Create config",
@@ -3385,6 +3389,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							print("Generated random config name: " .. configName)
 						end
 						SaveConfig(configName)
+						refreshConfigList()
 					end
 				})
 	
@@ -3401,6 +3406,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						if SelectedConfigName ~= "" then
 							SaveConfig(SelectedConfigName)
 							print("Overwritten config: " .. SelectedConfigName)
+							refreshConfigList()
 						else
 							print("Please select a config to overwrite!")
 						end
