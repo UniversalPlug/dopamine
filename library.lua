@@ -1818,6 +1818,13 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 		end
 	end
 	
+	local function UpdateConfigDropdown()
+		if ConfigDropdowns.configList then
+			local configNames = GetAvailableConfigNames()
+			print("Available configs: " .. table.concat(configNames, ", "))
+		end
+	end
+	
 	local function SaveConfig(configName)
 		if not configName or configName == "" or configName == "--" then
 			print("Config name cannot be empty!")
@@ -1858,12 +1865,6 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 		return GetConfigFileNames()
 	end
 	
-	local function UpdateConfigDropdown()
-		if ConfigDropdowns.configList then
-			local configNames = GetAvailableConfigNames()
-			print("Available configs: " .. table.concat(configNames, ", "))
-		end
-	end
 	
 	local function MakeUIDraggable(dragObject, dragArea)
 		local dragging
