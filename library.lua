@@ -3366,7 +3366,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
                     Text = "Config list",
                     Callback = function(state)
                         SelectedConfigName = state[1] or ""
-                        print("Selected config: " .. SelectedConfigName)
+                        print("Selected config: " .. tostring(SelectedConfigName))
                     end
                 })                
 		
