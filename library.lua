@@ -3373,7 +3373,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
                 })
                 
                 local function refreshConfigList()
-                    configDropdown:UpdateOptions(getConfigs())
+                    configDropdown:SetValues(getConfigs())
                 end                
 		
 				setting_configs_section:AddButton({
