@@ -1658,10 +1658,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 	local ConfigInputs = {}
 	local ConfigDropdowns = {}
 	local SelectedConfigName = ""
-	
-	-- Forward declaration
-	local UpdateConfigDropdown
-	
+		
 	local function SaveConfigToFile(configName, configData)
 		local configString = HttpService:JSONEncode(configData)
 		local filePath = "Dopamine/" .. configName .. ".json"
@@ -1700,24 +1697,24 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 		end
 	end
 	
-	local function GetConfigFileNames()
-		local configNames = {}
-	
-		local success, files = pcall(function()
-			return listfiles("Dopamine/")
-		end)
-	
-		if success then
-			for _, filePath in ipairs(files) do
-				local fileName = filePath:match("Dopamine/(.+)%.json$")
-				if fileName then
-					table.insert(configNames, fileName)
-				end
-			end
-		end
-	
-		return configNames
-	end
+	local function getConfigs()
+        local configNames = {}
+    
+        local success, files = pcall(listfiles, "Dopamine")
+    
+        if success and files then
+            for _, filePath in ipairs(files) do
+                local fileName = filePath:match("[/\\]([^/\\]+)%.json$")
+                if fileName then
+                    table.insert(configNames, fileName)
+                end
+            end
+        else
+            warn("Failed to list files in Dopamine folder.")
+        end
+    
+        return configNames
+    end
 	
 	local function DeleteConfigFile(configName)
 		local filePath = "Dopamine/" .. configName .. ".json"
@@ -1818,26 +1815,6 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 		end
 	end
 	
-	local function UpdateConfigDropdown()
-		if ConfigDropdowns.configList then
-			local configNames = GetAvailableConfigNames()
-			print("Available configs: " .. table.concat(configNames, ", "))
-			
-			if ConfigDropdowns.configList.SetValues then
-				local success, error = pcall(function()
-					ConfigDropdowns.configList.SetValues(configNames)
-				end)
-				if not success then
-					print("Error updating dropdown: " .. tostring(error))
-				end
-			else
-				print("SetValues method not available on dropdown")
-			end
-		else
-			print("ConfigDropdowns.configList is nil")
-		end
-	end
-	
 	local function SaveConfig(configName)
 		if not configName or configName == "" or configName == "--" then
 			local randomName = ""
@@ -1853,7 +1830,6 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 	
 		if success then
 			print("Config saved successfully: " .. configName)
-			UpdateConfigDropdown()
 		else
 			print("Failed to save config: " .. configName)
 			if error then
@@ -1876,10 +1852,6 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 	
 		ApplyConfig(config)
 		print("Loaded config: " .. configName)
-	end
-	
-	local function GetAvailableConfigNames()
-		return GetConfigFileNames()
 	end
 	
 	local function MakeUIDraggable(dragObject, dragArea)
@@ -3380,16 +3352,16 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					end
 				})
 	
-				ConfigDropdowns.configList = setting_configs_section:AddDropdown({
-					Values = GetAvailableConfigNames(), 
-					Default = "",
-					Multi = false,
-					Text = 'Config list', 
-					Callback = function(state)
-						SelectedConfigName = state[1] or ""
-						print("Selected config: " .. SelectedConfigName)
-					end
-				})
+				setting_configs_section:AddDropdown({
+                    Values = GetConfigFileNames(),
+                    Default = "",
+                    Multi = false,
+                    Text = "Config list",
+                    Callback = function(state)
+                        SelectedConfigName = state or ""
+                        print("Selected config: " .. SelectedConfigName)
+                    end
+                })                
 		
 				setting_configs_section:AddButton({
 					Text = "Create config",
