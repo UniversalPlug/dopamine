@@ -4346,6 +4346,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 	
 	return CreateWindow
 	return CreateWindow
+	return CreateWindow
 end
 
 return ZGJC_fake_script()
