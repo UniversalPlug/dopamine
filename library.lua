@@ -1733,6 +1733,12 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 		return success
 	end
 	
+	local function UpdateConfigDropdown()
+		if ConfigDropdowns.configList then
+			ConfigDropdowns.configList.SetValues(getConfigs())
+		end
+	end
+	
 	local function CaptureCurrentConfig()
 		local config = {
 			toggles = {},
@@ -1837,6 +1843,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 	
 		if success then
 			print("Config saved successfully: " .. configName)
+			UpdateConfigDropdown()
 		else
 			print("Failed to save config: " .. configName)
 			if error then
@@ -3361,7 +3368,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					end
 				})
 	
-				local configDropdown = setting_configs_section:AddDropdown({
+				ConfigDropdowns.configList = setting_configs_section:AddDropdown({
                     Values = getConfigs(),
                     Default = "",
                     Multi = false,
@@ -3370,49 +3377,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
                         SelectedConfigName = state[1] or ""
                         print("Selected config: " .. tostring(SelectedConfigName))
                     end
-                })
-                
-                local function refreshConfigList()
-                    local newConfigs = getConfigs()
-                    local dropdownFrame = configDropdown.Instance
-                    local scrollingFrame = dropdownFrame.Dropdown.ScrollingFrame
-                    
-                    -- Clear existing buttons
-                    for _, child in pairs(scrollingFrame:GetChildren()) do
-                        if child:IsA("TextButton") and child.Name == "Button" then
-                            child:Destroy()
-                        end
-                    end
-                    
-                    -- Add new buttons for each config
-                    for _, configName in ipairs(newConfigs) do
-                        local itemButton = dropdownFrame.Button:Clone()
-                        itemButton.Parent = scrollingFrame
-                        itemButton.Text = tostring(configName)
-                        itemButton.Visible = true
-                        itemButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                        
-                        itemButton.MouseButton1Click:Connect(function()
-                            SelectedConfigName = configName
-                            print("Selected config: " .. tostring(SelectedConfigName))
-                            -- Close dropdown
-                            local status = dropdownFrame.Status
-                            status.Text = "+"
-                            dropdownFrame.Dropdown.Visible = false
-                        end)
-                    end
-                    
-                    -- Update scrolling frame size
-                    local fixedHeight = 20
-                    scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, #newConfigs * fixedHeight)
-                    if #newConfigs > 5 then
-                        scrollingFrame.Size = UDim2.new(1, 0, 0, 5 * fixedHeight)
-                        scrollingFrame.ScrollBarThickness = 6
-                    else
-                        scrollingFrame.Size = UDim2.new(1, 0, 0, #newConfigs * fixedHeight)
-                        scrollingFrame.ScrollBarThickness = 0
-                    end
-                end                
+                })                
 		
 				setting_configs_section:AddButton({
 					Text = "Create config",
@@ -3427,7 +3392,6 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							print("Generated random config name: " .. configName)
 						end
 						SaveConfig(configName)
-						refreshConfigList()
 					end
 				})
 	
@@ -3444,9 +3408,26 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						if SelectedConfigName ~= "" then
 							SaveConfig(SelectedConfigName)
 							print("Overwritten config: " .. SelectedConfigName)
-							refreshConfigList()
 						else
 							print("Please select a config to overwrite!")
+						end
+					end
+				})
+	
+				setting_configs_section:AddButton({
+					Text = "Delete config",
+					Callback = function(state)
+						if SelectedConfigName ~= "" then
+							local success = DeleteConfigFile(SelectedConfigName)
+							if success then
+								print("Deleted config: " .. SelectedConfigName)
+								UpdateConfigDropdown()
+								SelectedConfigName = ""
+							else
+								print("Failed to delete config: " .. SelectedConfigName)
+							end
+						else
+							print("Please select a config to delete!")
 						end
 					end
 				})
