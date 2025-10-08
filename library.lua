@@ -1700,7 +1700,14 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 	local function getConfigs()
         local configNames = {}
     
-        local success, files = pcall(listfiles, "Dopamine")
+        -- Try to list files in the Dopamine directory
+        local success, files = pcall(function()
+            if listfiles then
+                return listfiles("Dopamine")
+            else
+                return nil
+            end
+        end)
     
         if success and files then
             for _, filePath in ipairs(files) do
@@ -1710,7 +1717,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
                 end
             end
         else
-            warn("Failed to list files in Dopamine folder.")
+            warn("listfiles function not available or Dopamine folder not found.")
         end
     
         return configNames
@@ -3358,7 +3365,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
                     Multi = false,
                     Text = "Config list",
                     Callback = function(state)
-                        SelectedConfigName = state or ""
+                        SelectedConfigName = state[1] or ""
                         print("Selected config: " .. SelectedConfigName)
                     end
                 })                
