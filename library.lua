@@ -1659,6 +1659,9 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 	local ConfigDropdowns = {}
 	local SelectedConfigName = ""
 	
+	-- Forward declaration
+	local UpdateConfigDropdown
+	
 	local function SaveConfigToFile(configName, configData)
 		local configString = HttpService:JSONEncode(configData)
 		local filePath = "Dopamine/" .. configName .. ".json"
