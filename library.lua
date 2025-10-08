@@ -3511,6 +3511,10 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						if SelectedConfigName ~= "" then
 							CurrentConfig = LoadConfigFromFile(SelectedConfigName)
 							if CurrentConfig then
+								-- Actually apply the config
+								ApplyConfig(CurrentConfig)
+								-- Save autoload setting to file
+								writefile("Dopamine/autoload.txt", SelectedConfigName)
 								print("Set autoload config: " .. SelectedConfigName)
 							else
 								print("Failed to load config for autoload: " .. SelectedConfigName)
@@ -3525,6 +3529,29 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 			end
 		}
 	end
+	
+	-- Load autoload config if it exists
+	local function LoadAutoloadConfig()
+		local success, autoloadName = pcall(function()
+			return readfile("Dopamine/autoload.txt")
+		end)
+		
+		if success and autoloadName and autoloadName ~= "" then
+			local autoloadConfig = LoadConfigFromFile(autoloadName)
+			if autoloadConfig then
+				ApplyConfig(autoloadConfig)
+				print("Autoloaded config: " .. autoloadName)
+			else
+				print("Failed to autoload config: " .. autoloadName)
+			end
+		end
+	end
+	
+	-- Load autoload config after a short delay to ensure UI is ready
+	spawn(function()
+		wait(1)
+		LoadAutoloadConfig()
+	end)
 
 	return CreateWindow
 end
