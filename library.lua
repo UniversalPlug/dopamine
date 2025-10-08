@@ -1822,6 +1822,11 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 		if ConfigDropdowns.configList then
 			local configNames = GetAvailableConfigNames()
 			print("Available configs: " .. table.concat(configNames, ", "))
+			
+			-- Update the dropdown values using the SetValues method
+			if ConfigDropdowns.configList.SetValues then
+				ConfigDropdowns.configList.SetValues(configNames)
+			end
 		end
 	end
 	
@@ -1840,6 +1845,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 	
 		if success then
 			print("Config saved successfully: " .. configName)
+			UpdateConfigDropdown()
 		else
 			print("Failed to save config: " .. configName)
 			if error then
@@ -1867,7 +1873,6 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 	local function GetAvailableConfigNames()
 		return GetConfigFileNames()
 	end
-	
 	
 	local function MakeUIDraggable(dragObject, dragArea)
 		local dragging
