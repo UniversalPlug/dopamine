@@ -1836,7 +1836,6 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 	
 		if success then
 			print("Config saved successfully: " .. configName)
-			UpdateConfigDropdown()
 		else
 			print("Failed to save config: " .. configName)
 			if error then
