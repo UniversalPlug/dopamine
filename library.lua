@@ -1827,8 +1827,12 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 	
 	local function SaveConfig(configName)
 		if not configName or configName == "" or configName == "--" then
-			print("Config name cannot be empty!")
-			return
+			local randomName = ""
+			for i = 1, 8 do
+				randomName = randomName .. string.char(math.random(97, 122))
+			end
+			configName = randomName
+			print("Generated random config name: " .. configName)
 		end
 	
 		local config = CaptureCurrentConfig()
