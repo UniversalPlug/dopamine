@@ -1662,12 +1662,16 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 	local function SaveConfigToFile(configName, configData)
 		local configString = HttpService:JSONEncode(configData)
 		local filePath = "Dopamine/" .. configName .. ".json"
-	
+
 		local success, error = pcall(function()
 			writefile(filePath, configString)
 		end)
-	
-		return success
+
+		if not success then
+			print("SaveConfigToFile error: " .. tostring(error))
+		end
+
+		return success, error
 	end
 	
 	local function LoadConfigFromFile(configName)
@@ -1818,13 +1822,16 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 		end
 	
 		local config = CaptureCurrentConfig()
-		local success = SaveConfigToFile(configName, config)
+		local success, error = SaveConfigToFile(configName, config)
 	
 		if success then
 			print("Config saved successfully: " .. configName)
 			UpdateConfigDropdown()
 		else
 			print("Failed to save config: " .. configName)
+			if error then
+				print("Error details: " .. tostring(error))
+			end
 		end
 	end
 	
