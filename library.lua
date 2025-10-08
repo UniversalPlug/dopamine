@@ -3348,7 +3348,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					end
 				})
 	
-				setting_configs_section:AddInput({
+				local configNameInput = setting_configs_section:AddInput({
 					Default = '--',
 					Numeric = false,
 					Finished = false,
@@ -3373,7 +3373,15 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 				setting_configs_section:AddButton({
 					Text = "Create config",
 					Callback = function(state)
-						local configName = ConfigInputs.configName and ConfigInputs.configName.TextBox.Text or ""
+						local configName = configNameInput.TextBox.Text or ""
+						if configName == "" or configName == "--" then
+							local randomName = ""
+							for i = 1, 8 do
+								randomName = randomName .. string.char(math.random(97, 122))
+							end
+							configName = randomName
+							print("Generated random config name: " .. configName)
+						end
 						SaveConfig(configName)
 					end
 				})
