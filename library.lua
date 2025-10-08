@@ -1823,10 +1823,18 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 			local configNames = GetAvailableConfigNames()
 			print("Available configs: " .. table.concat(configNames, ", "))
 			
-			-- Update the dropdown values using the SetValues method
 			if ConfigDropdowns.configList.SetValues then
-				ConfigDropdowns.configList.SetValues(configNames)
+				local success, error = pcall(function()
+					ConfigDropdowns.configList.SetValues(configNames)
+				end)
+				if not success then
+					print("Error updating dropdown: " .. tostring(error))
+				end
+			else
+				print("SetValues method not available on dropdown")
 			end
+		else
+			print("ConfigDropdowns.configList is nil")
 		end
 	end
 	
