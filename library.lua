@@ -1735,7 +1735,8 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 	
 	local function UpdateConfigDropdown()
 		if ConfigDropdowns.configList then
-			ConfigDropdowns.configList.SetValues(getConfigs())
+			local configs = getConfigs()
+			ConfigDropdowns.configList.SetValues(configs)
 		end
 	end
 	
@@ -2646,6 +2647,75 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						GetSelected = function() return selectedValues end,
 						SetSelected = function(values) 
 							selectedValues = values or {}
+							updateSelectedText()
+						end,
+						SetValues = function(newValues)
+							-- Clear existing item buttons
+							for _, btn in pairs(itemButtons) do
+								if btn and btn.Parent then
+									btn:Destroy()
+								end
+							end
+							itemButtons = {}
+							
+							-- Update values
+							values = newValues or {}
+							
+							-- Recreate item buttons
+							for _, value in ipairs(values) do
+								local itemButton = newDropdown.Button:Clone()
+								itemButton.Parent = dropdownList
+								itemButton.Text = tostring(value)
+								itemButton.Visible = true
+								itemButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+
+								itemButton.MouseButton1Click:Connect(function()
+									local valueStr = tostring(value)
+
+									if multi then
+										local index = table.find(selectedValues, valueStr)
+										if index then
+											table.remove(selectedValues, index)
+										else
+											table.insert(selectedValues, valueStr)
+										end
+										updateSelectedText()
+										callback(selectedValues)
+									else
+										if selectedValues[1] == valueStr then
+											selectedValues = {}
+										else
+											selectedValues = { valueStr }
+										end
+										updateSelectedText()
+										callback(selectedValues)
+										toggleDropdown()
+									end
+
+									for _, btn in pairs(itemButtons) do
+										if table.find(selectedValues, btn.Text) then
+											btn.TextColor3 = Color3.fromRGB(120, 167, 255)
+										else
+											btn.TextColor3 = Color3.fromRGB(129, 129, 129)
+										end
+									end
+								end)
+
+								table.insert(itemButtons, itemButton)
+							end
+							
+							-- Update dropdown size
+							dropdownList.CanvasSize = UDim2.new(0, 0, 0, #values * fixedHeight)
+							if #values > 5 then
+								dropdownList.Size = UDim2.new(1, 0, 0, 5 * fixedHeight)
+								dropdownList.ScrollBarThickness = 6
+							else
+								dropdownList.Size = UDim2.new(1, 0, 0, #values * fixedHeight)
+								dropdownList.ScrollBarThickness = 0
+							end
+							
+							-- Clear selection when values change
+							selectedValues = {}
 							updateSelectedText()
 						end
 					}
