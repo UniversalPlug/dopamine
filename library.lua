@@ -3373,9 +3373,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						print("Selected config: " .. SelectedConfigName)
 					end
 				})
-	
-				UpdateConfigDropdown()
-	
+		
 				setting_configs_section:AddButton({
 					Text = "Create config",
 					Callback = function(state)
