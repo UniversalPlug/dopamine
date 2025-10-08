@@ -3353,7 +3353,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 				})
 	
 				setting_configs_section:AddDropdown({
-                    Values = GetConfigFileNames(),
+                    Values = getConfigs(),
                     Default = "",
                     Multi = false,
                     Text = "Config list",
