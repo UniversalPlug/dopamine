@@ -3373,7 +3373,45 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
                 })
                 
                 local function refreshConfigList()
-                    configDropdown:SetValues(getConfigs())
+                    local newConfigs = getConfigs()
+                    local dropdownFrame = configDropdown.Instance
+                    local scrollingFrame = dropdownFrame.Dropdown.ScrollingFrame
+                    
+                    -- Clear existing buttons
+                    for _, child in pairs(scrollingFrame:GetChildren()) do
+                        if child:IsA("TextButton") and child.Name == "Button" then
+                            child:Destroy()
+                        end
+                    end
+                    
+                    -- Add new buttons for each config
+                    for _, configName in ipairs(newConfigs) do
+                        local itemButton = dropdownFrame.Button:Clone()
+                        itemButton.Parent = scrollingFrame
+                        itemButton.Text = tostring(configName)
+                        itemButton.Visible = true
+                        itemButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                        
+                        itemButton.MouseButton1Click:Connect(function()
+                            SelectedConfigName = configName
+                            print("Selected config: " .. tostring(SelectedConfigName))
+                            -- Close dropdown
+                            local status = dropdownFrame.Status
+                            status.Text = "+"
+                            dropdownFrame.Dropdown.Visible = false
+                        end)
+                    end
+                    
+                    -- Update scrolling frame size
+                    local fixedHeight = 20
+                    scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, #newConfigs * fixedHeight)
+                    if #newConfigs > 5 then
+                        scrollingFrame.Size = UDim2.new(1, 0, 0, 5 * fixedHeight)
+                        scrollingFrame.ScrollBarThickness = 6
+                    else
+                        scrollingFrame.Size = UDim2.new(1, 0, 0, #newConfigs * fixedHeight)
+                        scrollingFrame.ScrollBarThickness = 0
+                    end
                 end                
 		
 				setting_configs_section:AddButton({
