@@ -1734,7 +1734,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 	end
 	
 	local function UpdateConfigDropdown()
-		if ConfigDropdowns.configList then
+		if ConfigDropdowns.configList and ConfigDropdowns.configList.SetValues then
 			local configs = getConfigs()
 			ConfigDropdowns.configList.SetValues(configs)
 		end
@@ -2721,7 +2721,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					}
 					table.insert(AllDropdowns, dropdownControl)
 	
-					return newDropdown
+					return dropdownControl
 				end
 	
 				function wrappedSection:AddSeperator(title)
@@ -3438,7 +3438,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					end
 				})
 	
-				ConfigDropdowns.configList = setting_configs_section:AddDropdown({
+				local configDropdown = setting_configs_section:AddDropdown({
                     Values = getConfigs(),
                     Default = "",
                     Multi = false,
@@ -3447,7 +3447,10 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
                         SelectedConfigName = state[1] or ""
                         print("Selected config: " .. tostring(SelectedConfigName))
                     end
-                })                
+                })
+				
+				-- Store the dropdown control object, not the Frame
+				ConfigDropdowns.configList = configDropdown                
 		
 				setting_configs_section:AddButton({
 					Text = "Create config",
