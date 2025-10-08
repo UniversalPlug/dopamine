@@ -3341,7 +3341,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					end
 				})
 	
-				ConfigInputs.configName = setting_configs_section:AddInput({
+				setting_configs_section:AddInput({
 					Default = '--',
 					Numeric = false,
 					Finished = false,
