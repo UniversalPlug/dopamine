@@ -1667,23 +1667,25 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 	
 	UIS.InputBegan:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.MouseButton1 then
-			for _, dropdown in pairs(ActiveDropdowns) do
-				if dropdown and dropdown.Parent then
-					local dropdownList = dropdown:FindFirstChild("Dropdown"):FindFirstChild("ScrollingFrame")
-					local status = dropdown:FindFirstChild("Status")
-					if dropdownList and status then
-						dropdownList.Visible = false
-						status.Text = "+"
-						dropdown.ZIndex = 1
-						dropdownList.ZIndex = 1
-						local title = dropdown:FindFirstChild("Title")
-						if title then
-							title.TextColor3 = Color3.fromRGB(128, 128, 128)
+			if ActiveDropdowns then
+				for _, dropdown in pairs(ActiveDropdowns) do
+					if dropdown and dropdown.Parent then
+						local dropdownList = dropdown:FindFirstChild("Dropdown"):FindFirstChild("ScrollingFrame")
+						local status = dropdown:FindFirstChild("Status")
+						if dropdownList and status then
+							dropdownList.Visible = false
+							status.Text = "+"
+							dropdown.ZIndex = 1
+							dropdownList.ZIndex = 1
+							local title = dropdown:FindFirstChild("Title")
+							if title then
+								title.TextColor3 = Color3.fromRGB(128, 128, 128)
+							end
 						end
 					end
 				end
+				ActiveDropdowns = {}
 			end
-			ActiveDropdowns = {}
 		end
 	end)
 	
