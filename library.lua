@@ -2390,13 +2390,12 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					local min = options.Min or 0
 					local max = options.Max or 100
 					local step = options.Rounding or 1
-					local visible = options.Visible ~= nil and options.Visible or true
-	
+
 					local UIS = game:GetService("UserInputService")
 					local TweenService = game:GetService("TweenService")
 	
 					local newSlider = Elements.Slider:Clone()
-					newSlider.Visible = visible
+					newSlider.Visible = true
 					newSlider.Parent = self.Instance
 	
 					if wrappedSection._sizeConnection then
@@ -2587,12 +2586,11 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					local values = options.Values or {}
 					local default = options.Default or values[1] or ""
 					local multi = options.Multi or false
-					local visible = options.Visible ~= nil and options.Visible or true
 
 					local TweenService = game:GetService("TweenService")
 	
 					local newDropdown = Elements.Dropdown:Clone()
-					newDropdown.Visible = visible
+					newDropdown.Visible = true
 					newDropdown.Parent = self.Instance
 	
 					if wrappedSection._sizeConnection then
