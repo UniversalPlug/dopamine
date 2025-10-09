@@ -2586,7 +2586,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					local values = options.Values or {}
 					local default = options.Default or values[1] or ""
 					local multi = options.Multi or false
-
+	
 					local TweenService = game:GetService("TweenService")
 	
 					local newDropdown = Elements.Dropdown:Clone()
@@ -2611,9 +2611,6 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					local selectedValues = {}
 	
 					local function updateTitleColor(isOpen)
-						if not newDropdown or not newDropdown.Parent or not newDropdown:FindFirstChild("Title") then
-							return
-						end
 						local targetColor = isOpen and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(128, 128, 128)
 						local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 						local tween = TweenService:Create(newDropdown.Title, tweenInfo, {TextColor3 = targetColor})
@@ -2648,41 +2645,36 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end
 					end
 	
-					local function closeAllDropdowns()
-						for _, dropdown in pairs(ActiveDropdowns) do
-							if dropdown and dropdown.Parent then
-								local dropdownList = dropdown:FindFirstChild("Dropdown"):FindFirstChild("ScrollingFrame")
-								local status = dropdown:FindFirstChild("Status")
-								if dropdownList and status then
-									dropdownList.Visible = false
-									status.Text = "+"
-									dropdown.ZIndex = 1
-									dropdownList.ZIndex = 1
-									local title = dropdown:FindFirstChild("Title")
-									if title then
-										title.TextColor3 = Color3.fromRGB(128, 128, 128)
+					local function toggleDropdown()
+						if not isOpen then
+							for _, dropdown in pairs(ActiveDropdowns) do
+								if dropdown and dropdown.Parent then
+									local dropdownList = dropdown:FindFirstChild("Dropdown"):FindFirstChild("ScrollingFrame")
+									local status = dropdown:FindFirstChild("Status")
+									if dropdownList and status then
+										dropdownList.Visible = false
+										status.Text = "+"
+										dropdown.ZIndex = 1
+										dropdownList.ZIndex = 1
+										local title = dropdown:FindFirstChild("Title")
+										if title then
+											title.TextColor3 = Color3.fromRGB(128, 128, 128)
+										end
 									end
 								end
 							end
+							ActiveDropdowns = {}
 						end
-						ActiveDropdowns = {}
-					end
-
-					local function toggleDropdown()
-						if not isOpen then
-							closeAllDropdowns()
-						end
-
+	
 						isOpen = not isOpen
 						dropdownList.Visible = isOpen
 						status.Text = isOpen and "-" or "+"
 						updateTitleColor(isOpen)
-
+	
 						if isOpen then
-							closeAllDropdowns()
 							table.insert(ActiveDropdowns, newDropdown)
-							newDropdown.ZIndex = 99999
-							dropdownList.ZIndex = 99999
+							newDropdown.ZIndex = 9999
+							dropdownList.ZIndex = 9999
 						else
 							for i, dropdown in ipairs(ActiveDropdowns) do
 								if dropdown == newDropdown then
@@ -2728,13 +2720,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 								end
 								updateSelectedText()
 								callback(selectedValues)
-								closeAllDropdowns()
-								isOpen = false
-								dropdownList.Visible = false
-								status.Text = "+"
-								updateTitleColor(false)
-								newDropdown.ZIndex = 1
-								dropdownList.ZIndex = 1
+								toggleDropdown()
 							end
 	
 							for _, btn in pairs(itemButtons) do
@@ -2796,10 +2782,10 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 								end
 							end
 							itemButtons = {}
-							
+	
 							-- Update values
 							values = newValues or {}
-							
+	
 							-- Recreate item buttons
 							for _, value in ipairs(values) do
 								local itemButton = newDropdown.Button:Clone()
@@ -2807,10 +2793,10 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 								itemButton.Text = tostring(value)
 								itemButton.Visible = true
 								itemButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-
+	
 								itemButton.MouseButton1Click:Connect(function()
 									local valueStr = tostring(value)
-
+	
 									if multi then
 										local index = table.find(selectedValues, valueStr)
 										if index then
@@ -2828,15 +2814,9 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 										end
 										updateSelectedText()
 										callback(selectedValues)
-										closeAllDropdowns()
-										isOpen = false
-										dropdownList.Visible = false
-										status.Text = "+"
-										updateTitleColor(false)
-										newDropdown.ZIndex = 1
-										dropdownList.ZIndex = 1
+										toggleDropdown()
 									end
-
+	
 									for _, btn in pairs(itemButtons) do
 										if table.find(selectedValues, btn.Text) then
 											btn.TextColor3 = Color3.fromRGB(120, 167, 255)
@@ -2845,10 +2825,10 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 										end
 									end
 								end)
-
+	
 								table.insert(itemButtons, itemButton)
 							end
-							
+	
 							-- Update dropdown size
 							dropdownList.CanvasSize = UDim2.new(0, 0, 0, #values * fixedHeight)
 							if #values > 5 then
@@ -2858,15 +2838,11 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 								dropdownList.Size = UDim2.new(1, 0, 0, #values * fixedHeight)
 								dropdownList.ScrollBarThickness = 0
 							end
-							
-							-- Clear selection when values change
-							selectedValues = {}
-							updateSelectedText()
 						end
 					}
 					table.insert(AllDropdowns, dropdownControl)
 	
-					return dropdownControl
+					return newDropdown
 				end
 	
 				function wrappedSection:AddSeperator(title)
