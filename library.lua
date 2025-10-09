@@ -2311,6 +2311,9 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					local dragging = false
 	
 					local function updateTitleColor(isDragging)
+						if not newSlider or not newSlider.Parent or not newSlider:FindFirstChild("Title") then
+							return
+						end
 						local targetColor = isDragging and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(128, 128, 128)
 						local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 						local tween = TweenService:Create(newSlider.Title, tweenInfo, {TextColor3 = targetColor})
@@ -2332,6 +2335,9 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					end
 	
 					local function updateSlider(value)
+						if not newSlider or not newSlider.Parent then
+							return
+						end
 						value = clampAndRound(value)
 						local percent = (value - min) / (max - min)
 						fill.Size = UDim2.new(percent, 0, 1, 0)
@@ -2340,6 +2346,9 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					end
 	
 					local function getSliderValueFromPosition(x)
+						if not newSlider or not newSlider.Parent or not newSlider:FindFirstChild("Slider") then
+							return min
+						end
 						local absPos = newSlider.Slider.AbsolutePosition.X
 						local width = newSlider.Slider.AbsoluteSize.X
 						local relX = math.clamp(x - absPos, 0, width)
@@ -2384,8 +2393,18 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 	
 					local sliderControl = {
 						Instance = newSlider,
-						GetValue = function() return tonumber(inputBox.Text) or defaultState end,
-						SetValue = function(value) updateSlider(value) end
+						GetValue = function() 
+							if not newSlider or not newSlider.Parent or not inputBox then
+								return defaultState
+							end
+							return tonumber(inputBox.Text) or defaultState 
+						end,
+						SetValue = function(value) 
+							if not newSlider or not newSlider.Parent then
+								return
+							end
+							updateSlider(value) 
+						end
 					}
 					table.insert(AllSliders, sliderControl)
 	
