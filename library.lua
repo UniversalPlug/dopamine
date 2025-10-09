@@ -3483,7 +3483,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 
 					local newFrame = Elements.Frame:Clone()
 					newFrame.Visible = visible
-					newFrame.Parent = options.Parent or bg
+					newFrame.Parent = bg.Parent
 
 					if wrappedSection._sizeConnection then
 						newFrame:GetPropertyChangedSignal("Visible"):Connect(function()
