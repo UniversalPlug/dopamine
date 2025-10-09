@@ -1717,6 +1717,21 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 	local RightSectionArea = sections.Background.RightSections
 	local LeftSectionArea = sections.Background.LeftSections
 	
+	local function updateScrolling(scrollingFrame)
+		if not scrollingFrame then return end
+		
+		local contentSize = scrollingFrame.UIListLayout.AbsoluteContentSize
+		local frameSize = scrollingFrame.AbsoluteSize.Y
+		
+		if contentSize.Y > frameSize then
+			scrollingFrame.ScrollingEnabled = true
+			scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, contentSize.Y)
+		else
+			scrollingFrame.ScrollingEnabled = false
+			scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+		end
+	end
+	
 	local AllToggles = {}
 	local AllSliders = {}
 	local AllDropdowns = {}
@@ -2191,7 +2206,10 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 				end
 	
 				setupAutoSizeListener()
-	
+				
+				updateScrolling(LeftSectionArea)
+				updateScrolling(RightSectionArea)
+
 				function wrappedSection:AddButton(options)
 					local title = options.Text or "Button"
 					local callback = options.Callback or function() end
@@ -2233,6 +2251,9 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						callback(true)
 					end)
 	
+					updateScrolling(LeftSectionArea)
+					updateScrolling(RightSectionArea)
+					
 					return newButton
 				end
 	
@@ -2356,9 +2377,12 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end,
 					}				
 					table.insert(AllToggles, toggleControl)
+					updateScrolling(LeftSectionArea)
+					updateScrolling(RightSectionArea)
+					
 					return toggleControl
 				end
-	
+
 				function wrappedSection:AddSlider(options)
 					local title = options.Text or "Slider"
 					local callback = options.Callback or function() end
@@ -2486,7 +2510,10 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end
 					}
 					table.insert(AllSliders, sliderControl)
-	
+					
+					updateScrolling(LeftSectionArea)
+					updateScrolling(RightSectionArea)
+
 					return newSlider
 				end
 	
@@ -2552,7 +2579,10 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						SetValue = function(value) textBox.Text = tostring(value) end
 					}
 					table.insert(AllInputs, inputControl)
-	
+					
+					updateScrolling(LeftSectionArea)
+					updateScrolling(RightSectionArea)
+
 					return newInputbox
 				end
 	
@@ -2825,7 +2855,10 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end
 					}
 					table.insert(AllDropdowns, dropdownControl)
-	
+					
+					updateScrolling(LeftSectionArea)
+					updateScrolling(RightSectionArea)
+
 					return dropdownControl
 				end
 	
@@ -2840,7 +2873,10 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end)
 					end
 					newSeperator.Title.Text = title
-	
+					
+					updateScrolling(LeftSectionArea)
+					updateScrolling(RightSectionArea)
+
 					return newSeperator
 				end
 	
@@ -2921,7 +2957,10 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							return keybind
 						end
 					}
-	
+					
+					updateScrolling(LeftSectionArea)
+					updateScrolling(RightSectionArea)
+
 					return textControl
 				end
 	
@@ -3134,7 +3173,10 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end
 					}
 					table.insert(AllKeybinds, keybindControl)
-	
+					
+					updateScrolling(LeftSectionArea)
+					updateScrolling(RightSectionArea)
+
 					return newKeybind
 				end
 	
@@ -3425,7 +3467,10 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end
 					}
 					table.insert(AllColorPickers, colorPickerControl)
-	
+					
+					updateScrolling(LeftSectionArea)
+					updateScrolling(RightSectionArea)
+
 					return newColorPicker
 				end
 
@@ -3436,11 +3481,13 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					local sizeY = options.SizeY or 200
 					local positionX = options.PositionX or 0.5
 					local positionY = options.PositionY or 0.5
+					local visible = options.Visible ~= false
+					local titleAlignment = options.TitleAlignment or "left"
 					local callback = options.Callback or function() end
 
 					local newFrame = Elements.Frame:Clone()
-					newFrame.Visible = true
-					newFrame.Parent = options.Parent or game.CoreGui
+					newFrame.Visible = visible
+					newFrame.Parent = options.Parent or bg
 
 					if wrappedSection._sizeConnection then
 						newFrame:GetPropertyChangedSignal("Visible"):Connect(function()
@@ -3450,6 +3497,13 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 
 					if newFrame:FindFirstChild("TitleArea") and newFrame.TitleArea:FindFirstChild("Title") then
 						newFrame.TitleArea.Title.Text = title
+						if titleAlignment == "center" then
+							newFrame.TitleArea.Title.TextXAlignment = Enum.TextXAlignment.Center
+						elseif titleAlignment == "right" then
+							newFrame.TitleArea.Title.TextXAlignment = Enum.TextXAlignment.Right
+						else
+							newFrame.TitleArea.Title.TextXAlignment = Enum.TextXAlignment.Left
+						end
 					end
 					newFrame.Size = UDim2.new(0, sizeX, 0, sizeY)
 					newFrame.Position = UDim2.new(positionX, 0, positionY, 0)
@@ -3496,6 +3550,17 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						SetTitle = function(text) 
 							if newFrame and newFrame.Parent and newFrame:FindFirstChild("TitleArea") and newFrame.TitleArea:FindFirstChild("Title") then
 								newFrame.TitleArea.Title.Text = text 
+							end
+						end,
+						SetTitleAlignment = function(alignment)
+							if newFrame and newFrame.Parent and newFrame:FindFirstChild("TitleArea") and newFrame.TitleArea:FindFirstChild("Title") then
+								if alignment == "center" then
+									newFrame.TitleArea.Title.TextXAlignment = Enum.TextXAlignment.Center
+								elseif alignment == "right" then
+									newFrame.TitleArea.Title.TextXAlignment = Enum.TextXAlignment.Right
+								else
+									newFrame.TitleArea.Title.TextXAlignment = Enum.TextXAlignment.Left
+								end
 							end
 						end,
 						GetSize = function() return newFrame.Size end,
