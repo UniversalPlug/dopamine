@@ -3448,7 +3448,9 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end)
 					end
 
-					newFrame.TitleArea.Title.Text = title
+					if newFrame:FindFirstChild("TitleArea") and newFrame.TitleArea:FindFirstChild("Title") then
+						newFrame.TitleArea.Title.Text = title
+					end
 					newFrame.Size = UDim2.new(0, sizeX, 0, sizeY)
 					newFrame.Position = UDim2.new(positionX, 0, positionY, 0)
 
@@ -3457,13 +3459,15 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						local dragStart = nil
 						local startPos = nil
 
-						newFrame.TitleArea.InputBegan:Connect(function(input)
-							if input.UserInputType == Enum.UserInputType.MouseButton1 then
-								dragging = true
-								dragStart = input.Position
-								startPos = newFrame.Position
-							end
-						end)
+						if newFrame:FindFirstChild("TitleArea") then
+							newFrame.TitleArea.InputBegan:Connect(function(input)
+								if input.UserInputType == Enum.UserInputType.MouseButton1 then
+									dragging = true
+									dragStart = input.Position
+									startPos = newFrame.Position
+								end
+							end)
+						end
 
 						game:GetService("UserInputService").InputChanged:Connect(function(input)
 							if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
