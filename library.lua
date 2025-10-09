@@ -2185,6 +2185,9 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					newToggle.Title.TextColor3 = isOn and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(128, 128, 128)
 	
 					local function updateTitleColor(state)
+						if not newToggle or not newToggle.Parent or not newToggle:FindFirstChild("Title") then
+							return
+						end
 						local targetColor = state and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(128, 128, 128)
 						local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 						local tween = TweenService:Create(newToggle.Title, tweenInfo, {TextColor3 = targetColor})
@@ -2435,6 +2438,9 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					local textBox = newInputbox.TextBox  
 	
 					local function updateTitleColor(isFocused)
+						if not newInputbox or not newInputbox.Parent or not newInputbox:FindFirstChild("Title") then
+							return
+						end
 						local targetColor = isFocused and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(128, 128, 128)
 						local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 						local tween = TweenService:Create(newInputbox.Title, tweenInfo, {TextColor3 = targetColor})
@@ -2506,6 +2512,9 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					local selectedValues = {}
 	
 					local function updateTitleColor(isOpen)
+						if not newDropdown or not newDropdown.Parent or not newDropdown:FindFirstChild("Title") then
+							return
+						end
 						local targetColor = isOpen and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(128, 128, 128)
 						local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 						local tween = TweenService:Create(newDropdown.Title, tweenInfo, {TextColor3 = targetColor})
