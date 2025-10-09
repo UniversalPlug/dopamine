@@ -45,10 +45,14 @@ def search_and_replace_fake_script(file_path):
             lines = new_content.split('\n')
             cleaned_lines = [line for line in lines if 'ImageContent' not in line]
             
-            for i in range(len(cleaned_lines) - 1, -1, -1):
-                if cleaned_lines[i].strip() == 'end':
-                    cleaned_lines.insert(i, '\treturn CreateWindow')
-                    break
+            # Check if return CreateWindow already exists
+            has_return_createwindow = any('return CreateWindow' in line for line in cleaned_lines)
+            
+            if not has_return_createwindow:
+                for i in range(len(cleaned_lines) - 1, -1, -1):
+                    if cleaned_lines[i].strip() == 'end':
+                        cleaned_lines.insert(i, '\treturn CreateWindow')
+                        break
             
             new_content = '\n'.join(cleaned_lines)
             
@@ -64,7 +68,10 @@ def search_and_replace_fake_script(file_path):
             update_script_version(new_version)
             CURRENT_VERSION = new_version
 
-            description = input("Enter commit description: ")
+            try:
+                description = input("Enter commit description: ")
+            except EOFError:
+                description = "Auto-generated commit"
             commit_message = f"Added library.lua | V{CURRENT_VERSION} | {description}"
             subprocess.run(["git", "commit", "-m", commit_message])
             print(f"Committed to git: {commit_message}")
