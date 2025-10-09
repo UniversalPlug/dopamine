@@ -1665,6 +1665,28 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 	local Players = game:GetService("Players")
 	local ReplicatedStorage = game:GetService("ReplicatedStorage")
 	
+	UIS.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			for _, dropdown in pairs(ActiveDropdowns) do
+				if dropdown and dropdown.Parent then
+					local dropdownList = dropdown:FindFirstChild("Dropdown"):FindFirstChild("ScrollingFrame")
+					local status = dropdown:FindFirstChild("Status")
+					if dropdownList and status then
+						dropdownList.Visible = false
+						status.Text = "+"
+						dropdown.ZIndex = 1
+						dropdownList.ZIndex = 1
+						local title = dropdown:FindFirstChild("Title")
+						if title then
+							title.TextColor3 = Color3.fromRGB(128, 128, 128)
+						end
+					end
+				end
+			end
+			ActiveDropdowns = {}
+		end
+	end)
+	
 	local ui = script.Parent
 	local bg = ui.Main
 	local sections = bg.Sections
@@ -1716,21 +1738,6 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 	local TabArea = LeftPanel.TabArea
 	local RightSectionArea = sections.Background.RightSections
 	local LeftSectionArea = sections.Background.LeftSections
-	
-	local function updateScrolling(scrollingFrame)
-		if not scrollingFrame then return end
-		
-		local contentSize = scrollingFrame.UIListLayout.AbsoluteContentSize
-		local frameSize = scrollingFrame.AbsoluteSize.Y
-		
-		if contentSize.Y > frameSize then
-			scrollingFrame.ScrollingEnabled = true
-			scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, contentSize.Y)
-		else
-			scrollingFrame.ScrollingEnabled = false
-			scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
-		end
-	end
 	
 	local AllToggles = {}
 	local AllSliders = {}
@@ -2206,10 +2213,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 				end
 	
 				setupAutoSizeListener()
-				
-				updateScrolling(LeftSectionArea)
-				updateScrolling(RightSectionArea)
-
+	
 				function wrappedSection:AddButton(options)
 					local title = options.Text or "Button"
 					local callback = options.Callback or function() end
@@ -2251,9 +2255,6 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						callback(true)
 					end)
 	
-					updateScrolling(LeftSectionArea)
-					updateScrolling(RightSectionArea)
-					
 					return newButton
 				end
 	
@@ -2377,12 +2378,9 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end,
 					}				
 					table.insert(AllToggles, toggleControl)
-					updateScrolling(LeftSectionArea)
-					updateScrolling(RightSectionArea)
-					
 					return toggleControl
 				end
-
+	
 				function wrappedSection:AddSlider(options)
 					local title = options.Text or "Slider"
 					local callback = options.Callback or function() end
@@ -2510,10 +2508,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end
 					}
 					table.insert(AllSliders, sliderControl)
-					
-					updateScrolling(LeftSectionArea)
-					updateScrolling(RightSectionArea)
-
+	
 					return newSlider
 				end
 	
@@ -2579,10 +2574,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						SetValue = function(value) textBox.Text = tostring(value) end
 					}
 					table.insert(AllInputs, inputControl)
-					
-					updateScrolling(LeftSectionArea)
-					updateScrolling(RightSectionArea)
-
+	
 					return newInputbox
 				end
 	
@@ -2655,36 +2647,41 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end
 					end
 	
-					local function toggleDropdown()
-						if not isOpen then
-							for _, dropdown in pairs(ActiveDropdowns) do
-								if dropdown and dropdown.Parent then
-									local dropdownList = dropdown:FindFirstChild("Dropdown"):FindFirstChild("ScrollingFrame")
-									local status = dropdown:FindFirstChild("Status")
-									if dropdownList and status then
-										dropdownList.Visible = false
-										status.Text = "+"
-										dropdown.ZIndex = 1
-										dropdownList.ZIndex = 1
-										local title = dropdown:FindFirstChild("Title")
-										if title then
-											title.TextColor3 = Color3.fromRGB(128, 128, 128)
-										end
+					local function closeAllDropdowns()
+						for _, dropdown in pairs(ActiveDropdowns) do
+							if dropdown and dropdown.Parent then
+								local dropdownList = dropdown:FindFirstChild("Dropdown"):FindFirstChild("ScrollingFrame")
+								local status = dropdown:FindFirstChild("Status")
+								if dropdownList and status then
+									dropdownList.Visible = false
+									status.Text = "+"
+									dropdown.ZIndex = 1
+									dropdownList.ZIndex = 1
+									local title = dropdown:FindFirstChild("Title")
+									if title then
+										title.TextColor3 = Color3.fromRGB(128, 128, 128)
 									end
 								end
 							end
-							ActiveDropdowns = {}
 						end
-	
+						ActiveDropdowns = {}
+					end
+
+					local function toggleDropdown()
+						if not isOpen then
+							closeAllDropdowns()
+						end
+
 						isOpen = not isOpen
 						dropdownList.Visible = isOpen
 						status.Text = isOpen and "-" or "+"
 						updateTitleColor(isOpen)
-	
+
 						if isOpen then
+							closeAllDropdowns()
 							table.insert(ActiveDropdowns, newDropdown)
-							newDropdown.ZIndex = 9999
-							dropdownList.ZIndex = 9999
+							newDropdown.ZIndex = 99999
+							dropdownList.ZIndex = 99999
 						else
 							for i, dropdown in ipairs(ActiveDropdowns) do
 								if dropdown == newDropdown then
@@ -2730,7 +2727,13 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 								end
 								updateSelectedText()
 								callback(selectedValues)
-								toggleDropdown()
+								closeAllDropdowns()
+								isOpen = false
+								dropdownList.Visible = false
+								status.Text = "+"
+								updateTitleColor(false)
+								newDropdown.ZIndex = 1
+								dropdownList.ZIndex = 1
 							end
 	
 							for _, btn in pairs(itemButtons) do
@@ -2824,7 +2827,13 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 										end
 										updateSelectedText()
 										callback(selectedValues)
-										toggleDropdown()
+										closeAllDropdowns()
+										isOpen = false
+										dropdownList.Visible = false
+										status.Text = "+"
+										updateTitleColor(false)
+										newDropdown.ZIndex = 1
+										dropdownList.ZIndex = 1
 									end
 
 									for _, btn in pairs(itemButtons) do
@@ -2855,10 +2864,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end
 					}
 					table.insert(AllDropdowns, dropdownControl)
-					
-					updateScrolling(LeftSectionArea)
-					updateScrolling(RightSectionArea)
-
+	
 					return dropdownControl
 				end
 	
@@ -2873,10 +2879,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end)
 					end
 					newSeperator.Title.Text = title
-					
-					updateScrolling(LeftSectionArea)
-					updateScrolling(RightSectionArea)
-
+	
 					return newSeperator
 				end
 	
@@ -2957,10 +2960,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							return keybind
 						end
 					}
-					
-					updateScrolling(LeftSectionArea)
-					updateScrolling(RightSectionArea)
-
+	
 					return textControl
 				end
 	
@@ -3173,10 +3173,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end
 					}
 					table.insert(AllKeybinds, keybindControl)
-					
-					updateScrolling(LeftSectionArea)
-					updateScrolling(RightSectionArea)
-
+	
 					return newKeybind
 				end
 	
@@ -3467,10 +3464,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end
 					}
 					table.insert(AllColorPickers, colorPickerControl)
-					
-					updateScrolling(LeftSectionArea)
-					updateScrolling(RightSectionArea)
-
+	
 					return newColorPicker
 				end
 
