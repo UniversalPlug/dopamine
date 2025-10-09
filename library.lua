@@ -1704,7 +1704,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 		UnselectedTopTabs = nil,
 	
 		Text = bg.Elements.TextItem,
-		Frame = bg.Elements.Frame6,
+		Frame = bg.Elements.Frame,
 	}
 	
 	local Theme = {
