@@ -1704,7 +1704,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 		UnselectedTopTabs = nil,
 	
 		Text = bg.Elements.TextItem,
-		Frame = bg.Elements.FrameBG,
+		Frame = bg.Elements.Frame6,
 	}
 	
 	local Theme = {
@@ -3448,7 +3448,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end)
 					end
 
-					newFrame.Title.Text = title
+					newFrame.TitleArea.Title.Text = title
 					newFrame.Size = UDim2.new(0, sizeX, 0, sizeY)
 					newFrame.Position = UDim2.new(positionX, 0, positionY, 0)
 
@@ -3457,7 +3457,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						local dragStart = nil
 						local startPos = nil
 
-						newFrame.Title.InputBegan:Connect(function(input)
+						newFrame.TitleArea.InputBegan:Connect(function(input)
 							if input.UserInputType == Enum.UserInputType.MouseButton1 then
 								dragging = true
 								dragStart = input.Position
@@ -3483,10 +3483,15 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 
 					local frameControl = {
 						Instance = newFrame,
-						GetTitle = function() return newFrame.Title.Text end,
+						GetTitle = function() 
+							if newFrame and newFrame.Parent and newFrame:FindFirstChild("TitleArea") and newFrame.TitleArea:FindFirstChild("Title") then
+								return newFrame.TitleArea.Title.Text 
+							end
+							return ""
+						end,
 						SetTitle = function(text) 
-							if newFrame and newFrame.Parent and newFrame:FindFirstChild("Title") then
-								newFrame.Title.Text = text 
+							if newFrame and newFrame.Parent and newFrame:FindFirstChild("TitleArea") and newFrame.TitleArea:FindFirstChild("Title") then
+								newFrame.TitleArea.Title.Text = text 
 							end
 						end,
 						GetSize = function() return newFrame.Size end,
