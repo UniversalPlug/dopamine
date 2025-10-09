@@ -1531,6 +1531,42 @@ Converted["_TextItem"].ZIndex = 2
 Converted["_TextItem"].Name = "TextItem"
 Converted["_TextItem"].Parent = Converted["_Elements"]
 
+Converted["_FrameBG"].BackgroundColor3 = Color3.fromRGB(52.00000450015068, 52.00000450015068, 52.00000450015068)
+Converted["_FrameBG"].BackgroundTransparency = 0.10000000149011612
+Converted["_FrameBG"].BorderColor3 = Color3.fromRGB(0, 0, 0)
+Converted["_FrameBG"].BorderSizePixel = 0
+Converted["_FrameBG"].Position = UDim2.new(0.5, -100, 0.5, -100)
+Converted["_FrameBG"].Size = UDim2.new(0, 200, 0, 200)
+Converted["_FrameBG"].Visible = false
+Converted["_FrameBG"].ZIndex = 10
+Converted["_FrameBG"].Name = "FrameBG"
+Converted["_FrameBG"].Parent = Converted["_Elements"]
+
+Converted["_FrameTitle"].Font = Enum.Font.Cartoon
+Converted["_FrameTitle"].Text = "Frame"
+Converted["_FrameTitle"].TextColor3 = Color3.fromRGB(232.00001657009125, 232.00001657009125, 232.00001657009125)
+Converted["_FrameTitle"].TextSize = 14
+Converted["_FrameTitle"].TextXAlignment = Enum.TextXAlignment.Left
+Converted["_FrameTitle"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Converted["_FrameTitle"].BackgroundTransparency = 1
+Converted["_FrameTitle"].BorderColor3 = Color3.fromRGB(0, 0, 0)
+Converted["_FrameTitle"].BorderSizePixel = 0
+Converted["_FrameTitle"].Position = UDim2.new(0.05, 0, 0.05, 0)
+Converted["_FrameTitle"].Size = UDim2.new(0.9, 0, 0, 20)
+Converted["_FrameTitle"].ZIndex = 11
+Converted["_FrameTitle"].Name = "Title"
+Converted["_FrameTitle"].Parent = Converted["_FrameBG"]
+
+Converted["_FrameContent"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Converted["_FrameContent"].BackgroundTransparency = 1
+Converted["_FrameContent"].BorderColor3 = Color3.fromRGB(0, 0, 0)
+Converted["_FrameContent"].BorderSizePixel = 0
+Converted["_FrameContent"].Position = UDim2.new(0.05, 0, 0.15, 0)
+Converted["_FrameContent"].Size = UDim2.new(0.9, 0, 0.8, 0)
+Converted["_FrameContent"].ZIndex = 11
+Converted["_FrameContent"].Name = "Content"
+Converted["_FrameContent"].Parent = Converted["_FrameBG"]
+
 Converted["_UIStroke21"].Color = Color3.fromRGB(17.00000088661909, 17.00000088661909, 17.00000088661909)
 Converted["_UIStroke21"].Thickness = 0.800000011920929
 Converted["_UIStroke21"].Parent = Converted["_Main"]
@@ -1629,6 +1665,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 		UnselectedTopTabs = nil,
 	
 		Text = bg.Elements.TextItem,
+		Frame = bg.Elements.FrameBG,
 	}
 	
 	local Theme = {
@@ -3352,7 +3389,95 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 	
 					return newColorPicker
 				end
-	
+
+				function wrappedSection:AddFrame(options)
+					local title = options.Title or "Frame"
+					local draggable = options.Draggable or false
+					local sizeX = options.SizeX or 200
+					local sizeY = options.SizeY or 200
+					local positionX = options.PositionX or 0.5
+					local positionY = options.PositionY or 0.5
+					local callback = options.Callback or function() end
+
+					local newFrame = Elements.Frame:Clone()
+					newFrame.Visible = true
+					newFrame.Parent = options.Parent or game.CoreGui
+
+					if wrappedSection._sizeConnection then
+						newFrame:GetPropertyChangedSignal("Visible"):Connect(function()
+							wrappedSection:updateObjectAreaSize()
+						end)
+					end
+
+					newFrame.Title.Text = title
+					newFrame.Size = UDim2.new(0, sizeX, 0, sizeY)
+					newFrame.Position = UDim2.new(positionX, 0, positionY, 0)
+
+					if draggable then
+						local dragging = false
+						local dragStart = nil
+						local startPos = nil
+
+						newFrame.Title.InputBegan:Connect(function(input)
+							if input.UserInputType == Enum.UserInputType.MouseButton1 then
+								dragging = true
+								dragStart = input.Position
+								startPos = newFrame.Position
+							end
+						end)
+
+						game:GetService("UserInputService").InputChanged:Connect(function(input)
+							if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+								local delta = input.Position - dragStart
+								newFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+							end
+						end)
+
+						game:GetService("UserInputService").InputEnded:Connect(function(input)
+							if input.UserInputType == Enum.UserInputType.MouseButton1 then
+								dragging = false
+							end
+						end)
+					end
+
+					callback(newFrame)
+
+					local frameControl = {
+						Instance = newFrame,
+						GetTitle = function() return newFrame.Title.Text end,
+						SetTitle = function(text) 
+							if newFrame and newFrame.Parent and newFrame:FindFirstChild("Title") then
+								newFrame.Title.Text = text 
+							end
+						end,
+						GetSize = function() return newFrame.Size end,
+						SetSize = function(size) 
+							if newFrame and newFrame.Parent then
+								newFrame.Size = size 
+							end
+						end,
+						GetPosition = function() return newFrame.Position end,
+						SetPosition = function(position) 
+							if newFrame and newFrame.Parent then
+								newFrame.Position = position 
+							end
+						end,
+						GetVisible = function() return newFrame.Visible end,
+						SetVisible = function(visible) 
+							if newFrame and newFrame.Parent then
+								newFrame.Visible = visible 
+							end
+						end,
+						Destroy = function() 
+							if newFrame and newFrame.Parent then
+								newFrame:Destroy() 
+							end
+						end
+					}
+
+					return frameControl
+				end
+
 				return wrappedSection
 			end,
 	
