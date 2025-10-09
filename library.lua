@@ -163,12 +163,21 @@ local Converted = {
 	["_Status3"] = Instance.new("TextLabel");
 	["_UIStroke20"] = Instance.new("UIStroke");
 	["_TextItem"] = Instance.new("TextLabel");
+	["_Frame6"] = Instance.new("Frame");
+	["_TitleArea2"] = Instance.new("Frame");
+	["_Title11"] = Instance.new("TextLabel");
+	["_UIGradient24"] = Instance.new("UIGradient");
+	["_UIGradient25"] = Instance.new("UIGradient");
 	["_UIStroke21"] = Instance.new("UIStroke");
+	["_UICorner10"] = Instance.new("UICorner");
+	["_UIListLayout10"] = Instance.new("UIListLayout");
+	["_Frame7"] = Instance.new("Frame");
+	["_UIStroke22"] = Instance.new("UIStroke");
 	["_UIHandler"] = Instance.new("LocalScript");
 	["_MobileToggle"] = Instance.new("TextButton");
-	["_UIStroke22"] = Instance.new("UIStroke");
-	["_UIGradient24"] = Instance.new("UIGradient");
-	["_UICorner10"] = Instance.new("UICorner");
+	["_UIStroke23"] = Instance.new("UIStroke");
+	["_UIGradient26"] = Instance.new("UIGradient");
+	["_UICorner11"] = Instance.new("UICorner");
 }
 
 -- Properties:
@@ -1531,45 +1540,74 @@ Converted["_TextItem"].ZIndex = 2
 Converted["_TextItem"].Name = "TextItem"
 Converted["_TextItem"].Parent = Converted["_Elements"]
 
-Converted["_FrameBG"].BackgroundColor3 = Color3.fromRGB(52.00000450015068, 52.00000450015068, 52.00000450015068)
-Converted["_FrameBG"].BackgroundTransparency = 0.10000000149011612
-Converted["_FrameBG"].BorderColor3 = Color3.fromRGB(0, 0, 0)
-Converted["_FrameBG"].BorderSizePixel = 0
-Converted["_FrameBG"].Position = UDim2.new(0.5, -100, 0.5, -100)
-Converted["_FrameBG"].Size = UDim2.new(0, 200, 0, 200)
-Converted["_FrameBG"].Visible = false
-Converted["_FrameBG"].ZIndex = 10
-Converted["_FrameBG"].Name = "FrameBG"
-Converted["_FrameBG"].Parent = Converted["_Elements"]
+Converted["_Frame6"].BackgroundColor3 = Color3.fromRGB(11.000000294297934, 11.000000294297934, 11.000000294297934)
+Converted["_Frame6"].BorderColor3 = Color3.fromRGB(49.00000087916851, 49.00000087916851, 49.00000087916851)
+Converted["_Frame6"].Position = UDim2.new(0.0512291156, 0, 0.129737094, 0)
+Converted["_Frame6"].Size = UDim2.new(0, 280, 0, 280)
+Converted["_Frame6"].Visible = false
+Converted["_Frame6"].ZIndex = -2
+Converted["_Frame6"].Parent = Converted["_Elements"]
 
-Converted["_FrameTitle"].Font = Enum.Font.Cartoon
-Converted["_FrameTitle"].Text = "Frame"
-Converted["_FrameTitle"].TextColor3 = Color3.fromRGB(232.00001657009125, 232.00001657009125, 232.00001657009125)
-Converted["_FrameTitle"].TextSize = 14
-Converted["_FrameTitle"].TextXAlignment = Enum.TextXAlignment.Left
-Converted["_FrameTitle"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-Converted["_FrameTitle"].BackgroundTransparency = 1
-Converted["_FrameTitle"].BorderColor3 = Color3.fromRGB(0, 0, 0)
-Converted["_FrameTitle"].BorderSizePixel = 0
-Converted["_FrameTitle"].Position = UDim2.new(0.05, 0, 0.05, 0)
-Converted["_FrameTitle"].Size = UDim2.new(0.9, 0, 0, 20)
-Converted["_FrameTitle"].ZIndex = 11
-Converted["_FrameTitle"].Name = "Title"
-Converted["_FrameTitle"].Parent = Converted["_FrameBG"]
+Converted["_TitleArea2"].BackgroundColor3 = Color3.fromRGB(15.000000055879354, 15.000000055879354, 15.000000055879354)
+Converted["_TitleArea2"].BorderColor3 = Color3.fromRGB(0, 0, 0)
+Converted["_TitleArea2"].BorderSizePixel = 0
+Converted["_TitleArea2"].Size = UDim2.new(0, 255, 0, 26)
+Converted["_TitleArea2"].ZIndex = 0
+Converted["_TitleArea2"].Name = "TitleArea"
+Converted["_TitleArea2"].Parent = Converted["_Frame6"]
 
-Converted["_FrameContent"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-Converted["_FrameContent"].BackgroundTransparency = 1
-Converted["_FrameContent"].BorderColor3 = Color3.fromRGB(0, 0, 0)
-Converted["_FrameContent"].BorderSizePixel = 0
-Converted["_FrameContent"].Position = UDim2.new(0.05, 0, 0.15, 0)
-Converted["_FrameContent"].Size = UDim2.new(0.9, 0, 0.8, 0)
-Converted["_FrameContent"].ZIndex = 11
-Converted["_FrameContent"].Name = "Content"
-Converted["_FrameContent"].Parent = Converted["_FrameBG"]
+Converted["_Title11"].Font = Enum.Font.Cartoon
+Converted["_Title11"].Text = "silent aim"
+Converted["_Title11"].TextColor3 = Color3.fromRGB(134.00000721216202, 134.00000721216202, 134.00000721216202)
+Converted["_Title11"].TextSize = 12
+Converted["_Title11"].TextXAlignment = Enum.TextXAlignment.Left
+Converted["_Title11"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Converted["_Title11"].BackgroundTransparency = 1
+Converted["_Title11"].BorderColor3 = Color3.fromRGB(0, 0, 0)
+Converted["_Title11"].BorderSizePixel = 0
+Converted["_Title11"].Position = UDim2.new(0.029231891, 0, -1.17375305e-06, 0)
+Converted["_Title11"].Size = UDim2.new(0, 66, 0, 26)
+Converted["_Title11"].ZIndex = 2
+Converted["_Title11"].Name = "Title"
+Converted["_Title11"].Parent = Converted["_TitleArea2"]
+
+Converted["_UIGradient24"].Color = ColorSequence.new{
+	ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+	ColorSequenceKeypoint.new(1, Color3.fromRGB(156.00000590085983, 156.00000590085983, 156.00000590085983))
+}
+Converted["_UIGradient24"].Rotation = -88
+Converted["_UIGradient24"].Parent = Converted["_TitleArea2"]
+
+Converted["_UIGradient25"].Color = ColorSequence.new{
+	ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+	ColorSequenceKeypoint.new(1, Color3.fromRGB(156.00000590085983, 156.00000590085983, 156.00000590085983))
+}
+Converted["_UIGradient25"].Rotation = 90
+Converted["_UIGradient25"].Parent = Converted["_Frame6"]
 
 Converted["_UIStroke21"].Color = Color3.fromRGB(17.00000088661909, 17.00000088661909, 17.00000088661909)
 Converted["_UIStroke21"].Thickness = 0.800000011920929
-Converted["_UIStroke21"].Parent = Converted["_Main"]
+Converted["_UIStroke21"].Parent = Converted["_Frame6"]
+
+Converted["_UICorner10"].CornerRadius = UDim.new(0, 2)
+Converted["_UICorner10"].Parent = Converted["_Frame6"]
+
+Converted["_UIListLayout10"].Padding = UDim.new(0, 2)
+Converted["_UIListLayout10"].HorizontalAlignment = Enum.HorizontalAlignment.Center
+Converted["_UIListLayout10"].SortOrder = Enum.SortOrder.LayoutOrder
+Converted["_UIListLayout10"].Parent = Converted["_Frame6"]
+
+Converted["_Frame7"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Converted["_Frame7"].BackgroundTransparency = 1
+Converted["_Frame7"].BorderColor3 = Color3.fromRGB(0, 0, 0)
+Converted["_Frame7"].BorderSizePixel = 0
+Converted["_Frame7"].Position = UDim2.new(0.30392158, 0, 0.328571439, 0)
+Converted["_Frame7"].Size = UDim2.new(0, 100, 0, 7)
+Converted["_Frame7"].Parent = Converted["_Frame6"]
+
+Converted["_UIStroke22"].Color = Color3.fromRGB(17.00000088661909, 17.00000088661909, 17.00000088661909)
+Converted["_UIStroke22"].Thickness = 0.800000011920929
+Converted["_UIStroke22"].Parent = Converted["_Main"]
 
 Converted["_MobileToggle"].Font = Enum.Font.SourceSansBold
 Converted["_MobileToggle"].Text = "RIFTCORE"
@@ -1586,20 +1624,21 @@ Converted["_MobileToggle"].Visible = false
 Converted["_MobileToggle"].Name = "MobileToggle"
 Converted["_MobileToggle"].Parent = Converted["_Riftcore"]
 
-Converted["_UIStroke22"].ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-Converted["_UIStroke22"].Color = Color3.fromRGB(124.00000780820847, 124.00000780820847, 124.00000780820847)
-Converted["_UIStroke22"].Thickness = 0.800000011920929
-Converted["_UIStroke22"].Parent = Converted["_MobileToggle"]
+Converted["_UIStroke23"].ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+Converted["_UIStroke23"].Color = Color3.fromRGB(124.00000780820847, 124.00000780820847, 124.00000780820847)
+Converted["_UIStroke23"].Thickness = 0.800000011920929
+Converted["_UIStroke23"].Parent = Converted["_MobileToggle"]
 
-Converted["_UIGradient24"].Color = ColorSequence.new{
+Converted["_UIGradient26"].Color = ColorSequence.new{
 	ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
 	ColorSequenceKeypoint.new(1, Color3.fromRGB(158.00000578165054, 158.00000578165054, 158.00000578165054))
 }
-Converted["_UIGradient24"].Rotation = 90
-Converted["_UIGradient24"].Parent = Converted["_MobileToggle"]
+Converted["_UIGradient26"].Rotation = 90
+Converted["_UIGradient26"].Parent = Converted["_MobileToggle"]
 
-Converted["_UICorner10"].CornerRadius = UDim.new(0, 11)
-Converted["_UICorner10"].Parent = Converted["_MobileToggle"]
+Converted["_UICorner11"].CornerRadius = UDim.new(0, 11)
+Converted["_UICorner11"].Parent = Converted["_MobileToggle"]
+
 
 -- Fake Module Scripts:
 
