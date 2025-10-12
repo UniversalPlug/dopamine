@@ -348,7 +348,6 @@ Converted["_UIGradient"].Parent = Converted["_SideTab"]
 
 Converted["_RightSections"].ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
 Converted["_RightSections"].ScrollBarThickness = 0
-Converted["_RightSections"].ScrollingEnabled = false
 Converted["_RightSections"].Active = true
 Converted["_RightSections"].BackgroundColor3 = Color3.fromRGB(8.000000473111868, 8.000000473111868, 8.000000473111868)
 Converted["_RightSections"].BorderColor3 = Color3.fromRGB(0, 0, 0)
@@ -356,6 +355,7 @@ Converted["_RightSections"].BorderSizePixel = 0
 Converted["_RightSections"].Position = UDim2.new(0.619000018, 0, 0.0379999988, 0)
 Converted["_RightSections"].Size = UDim2.new(0, 256, 0, 472)
 Converted["_RightSections"].Name = "RightSections"
+Converted["_RightSections"].ScrollingEnabled = true
 Converted["_RightSections"].Parent = Converted["_Background"]
 
 Converted["_UIListLayout2"].ItemLineAlignment = Enum.ItemLineAlignment.Center
@@ -367,7 +367,7 @@ Converted["_UIListLayout2"].Parent = Converted["_RightSections"]
 
 Converted["_LeftSections"].ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
 Converted["_LeftSections"].ScrollBarThickness = 0
-Converted["_LeftSections"].ScrollingEnabled = false
+Converted["_LeftSections"].ScrollingEnabled = true
 Converted["_LeftSections"].Active = true
 Converted["_LeftSections"].BackgroundColor3 = Color3.fromRGB(8.000000473111868, 8.000000473111868, 8.000000473111868)
 Converted["_LeftSections"].BorderColor3 = Color3.fromRGB(0, 0, 0)
