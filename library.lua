@@ -3567,7 +3567,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							options = options or {}
 							local textLabel = Instance.new("TextLabel")
 							textLabel.Name = "Text_" .. tostring(math.random(100000, 999999))
-							textLabel.Text = text or ""
+							textLabel.Text = tostring(text or "")
 							textLabel.Size = options.Size or UDim2.new(1, -10, 0, 20)
 							textLabel.Position = options.Position or UDim2.new(0, 5, 0, 5)
 							textLabel.BackgroundTransparency = 1
