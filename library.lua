@@ -3457,6 +3457,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					local callback = options.Callback or function() end
 
 					local newFrame = Elements.Frame:Clone()
+					newFrame.Name = "Frame_" .. tostring(math.random(100000, 999999))
 					newFrame.Visible = visible
 					newFrame.Parent = bg.Parent
 
