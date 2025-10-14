@@ -3479,6 +3479,10 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					newFrame.Size = UDim2.new(0, sizeX, 0, sizeY)
 					newFrame.Position = UDim2.new(positionX, 0, positionY, 0)
 
+					if newFrame:FindFirstChild("TitleArea") then
+						newFrame.TitleArea.Size = UDim2.new(1, 0, 0, newFrame.TitleArea.AbsoluteSize.Y)
+					end
+
 					if draggable then
 						local dragging = false
 						local dragStart = nil
