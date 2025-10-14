@@ -3513,6 +3513,35 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end)
 					end
 
+					local function updateFrameSize()
+						if newFrame and newFrame.Parent then
+							local totalHeight = 0
+							local maxWidth = 0
+							local children = newFrame:GetChildren()
+							local guiChildren = {}
+							
+							for _, child in ipairs(children) do
+								if child:IsA("GuiObject") and child.Visible and child.Name:find("Text_") then
+									table.insert(guiChildren, child)
+								end
+							end
+							
+							for i, child in ipairs(guiChildren) do
+								totalHeight = totalHeight + child.AbsoluteSize.Y
+								if child.AbsoluteSize.X > maxWidth then
+									maxWidth = child.AbsoluteSize.X
+								end
+								if i < #guiChildren then
+									totalHeight = totalHeight + 5
+								end
+							end
+							
+							if totalHeight > 0 then
+								newFrame.Size = UDim2.new(0, math.max(maxWidth + 20, sizeX), 0, totalHeight + 40)
+							end
+						end
+					end
+
 					local frameControl = {
 						Instance = newFrame,
 						GetTitle = function() 
@@ -3582,6 +3611,13 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							textLabel.TextYAlignment = options.TextYAlignment or Enum.TextYAlignment.Center
 							textLabel.Visible = options.Visible ~= false
 							textLabel.Parent = newFrame
+							
+							textLabel:GetPropertyChangedSignal("Text"):Connect(updateFrameSize)
+							textLabel:GetPropertyChangedSignal("Visible"):Connect(updateFrameSize)
+							textLabel:GetPropertyChangedSignal("TextSize"):Connect(updateFrameSize)
+							
+							game:GetService("RunService").Heartbeat:Wait()
+							updateFrameSize()
 							
 							return textLabel
 						end,
