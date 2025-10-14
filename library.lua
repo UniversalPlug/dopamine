@@ -2841,8 +2841,8 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end
 					}
 					table.insert(AllDropdowns, dropdownControl)
-	
-					return newDropdown
+
+					return dropdownControl
 				end
 	
 				function wrappedSection:AddSeperator(title)
