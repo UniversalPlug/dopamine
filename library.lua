@@ -3589,13 +3589,13 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							end
 							return ""
 						end,
-						SetText = function(text) 
+						SetText = function(newText) 
 							if textLabel and textLabel.Parent then
-								textLabel.Text = text 
-							elseif text ~= "" then
+								textLabel.Text = newText 
+							elseif newText and newText ~= "" then
 								textLabel = Instance.new("TextLabel")
 								textLabel.Name = "ContentText"
-								textLabel.Text = text
+								textLabel.Text = newText
 								textLabel.TextSize = textSize
 								textLabel.TextColor3 = textColor
 								textLabel.BackgroundTransparency = 1
