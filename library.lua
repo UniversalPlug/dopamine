@@ -3513,8 +3513,6 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end)
 					end
 
-					callback(newFrame)
-
 					local frameControl = {
 						Instance = newFrame,
 						GetTitle = function() 
@@ -3589,6 +3587,8 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							end
 						end
 					}
+
+					callback(frameControl)
 
 					return frameControl
 				end
