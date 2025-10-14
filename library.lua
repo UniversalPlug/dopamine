@@ -3564,6 +3564,10 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						AddText = function(text, options)
 							if not newFrame or not newFrame.Parent then return nil end
 							
+							if type(text) == "table" then
+								text = "Invalid text parameter"
+							end
+							
 							options = options or {}
 							local textLabel = Instance.new("TextLabel")
 							textLabel.Name = "Text_" .. tostring(math.random(100000, 999999))
@@ -3588,7 +3592,9 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end
 					}
 
-					callback(frameControl)
+					if callback then
+						callback(frameControl)
+					end
 
 					return frameControl
 				end
