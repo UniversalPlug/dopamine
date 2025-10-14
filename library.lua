@@ -3516,7 +3516,6 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					local function updateFrameSize()
 						if newFrame and newFrame.Parent then
 							local totalHeight = 0
-							local maxWidth = 0
 							local children = newFrame:GetChildren()
 							local guiChildren = {}
 							
@@ -3528,16 +3527,13 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							
 							for i, child in ipairs(guiChildren) do
 								totalHeight = totalHeight + child.AbsoluteSize.Y
-								if child.AbsoluteSize.X > maxWidth then
-									maxWidth = child.AbsoluteSize.X
-								end
 								if i < #guiChildren then
 									totalHeight = totalHeight + 5
 								end
 							end
 							
 							if totalHeight > 0 then
-								newFrame.Size = UDim2.new(0, math.max(maxWidth + 20, sizeX), 0, totalHeight + 40)
+								newFrame.Size = UDim2.new(0, sizeX, 0, totalHeight + 40)
 							end
 						end
 					end
