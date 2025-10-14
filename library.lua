@@ -3542,6 +3542,25 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end
 					end
 
+					local function positionTextElements()
+						if newFrame and newFrame.Parent then
+							local children = newFrame:GetChildren()
+							local guiChildren = {}
+							local currentY = 30
+							
+							for _, child in ipairs(children) do
+								if child:IsA("GuiObject") and child.Visible and child.Name:find("Text_") then
+									table.insert(guiChildren, child)
+								end
+							end
+							
+							for i, child in ipairs(guiChildren) do
+								child.Position = UDim2.new(0, 5, 0, currentY)
+								currentY = currentY + child.AbsoluteSize.Y + 5
+							end
+						end
+					end
+
 					local frameControl = {
 						Instance = newFrame,
 						GetTitle = function() 
@@ -3602,7 +3621,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							textLabel.Name = "Text_" .. tostring(math.random(100000, 999999))
 							textLabel.Text = tostring(text or "")
 							textLabel.Size = options.Size or UDim2.new(1, -10, 0, 20)
-							textLabel.Position = options.Position or UDim2.new(0, 5, 0, 5)
+							textLabel.Position = UDim2.new(0, 5, 0, 5)
 							textLabel.BackgroundTransparency = 1
 							textLabel.TextColor3 = options.TextColor3 or Color3.fromRGB(255, 255, 255)
 							textLabel.TextSize = options.TextSize or 14
@@ -3612,12 +3631,17 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							textLabel.Visible = options.Visible ~= false
 							textLabel.Parent = newFrame
 							
-							textLabel:GetPropertyChangedSignal("Text"):Connect(updateFrameSize)
-							textLabel:GetPropertyChangedSignal("Visible"):Connect(updateFrameSize)
-							textLabel:GetPropertyChangedSignal("TextSize"):Connect(updateFrameSize)
+							local function updateText()
+								positionTextElements()
+								updateFrameSize()
+							end
+							
+							textLabel:GetPropertyChangedSignal("Text"):Connect(updateText)
+							textLabel:GetPropertyChangedSignal("Visible"):Connect(updateText)
+							textLabel:GetPropertyChangedSignal("TextSize"):Connect(updateText)
 							
 							game:GetService("RunService").Heartbeat:Wait()
-							updateFrameSize()
+							updateText()
 							
 							return textLabel
 						end,
