@@ -3454,10 +3454,6 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					local positionY = options.PositionY or 0.5
 					local visible = options.Visible ~= false
 					local titleAlignment = options.TitleAlignment or "left"
-					local textContent = options.Text or ""
-					local textColor = options.TextColor or Color3.fromRGB(255, 255, 255)
-					local textSize = options.TextSize or 14
-					local textAlignment = options.TextAlignment or "left"
 					local callback = options.Callback or function() end
 
 					local newFrame = Elements.Frame:Clone()
@@ -3482,30 +3478,6 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					end
 					newFrame.Size = UDim2.new(0, sizeX, 0, sizeY)
 					newFrame.Position = UDim2.new(positionX, 0, positionY, 0)
-
-					local textLabel = Instance.new("TextLabel")
-					textLabel.Name = "ContentText"
-					textLabel.Text = textContent
-					textLabel.TextColor3 = textColor
-					textLabel.TextSize = textSize
-					textLabel.BackgroundTransparency = 1
-					textLabel.Size = UDim2.new(1, -10, 1, -30)
-					textLabel.Position = UDim2.new(0, 5, 0, 25)
-					textLabel.TextWrapped = true
-					textLabel.Font = Enum.Font.Gotham
-					
-					if textAlignment == "center" then
-						textLabel.TextXAlignment = Enum.TextXAlignment.Center
-						textLabel.TextYAlignment = Enum.TextYAlignment.Center
-					elseif textAlignment == "right" then
-						textLabel.TextXAlignment = Enum.TextXAlignment.Right
-						textLabel.TextYAlignment = Enum.TextYAlignment.Top
-					else
-						textLabel.TextXAlignment = Enum.TextXAlignment.Left
-						textLabel.TextYAlignment = Enum.TextYAlignment.Top
-					end
-					
-					textLabel.Parent = newFrame
 
 					if draggable then
 						local dragging = false
@@ -3580,52 +3552,11 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 								newFrame.Visible = visible 
 							end
 						end,
-						GetText = function()
-							if newFrame and newFrame.Parent and newFrame:FindFirstChild("ContentText") then
-								return newFrame.ContentText.Text
+						GetPath = function()
+							if newFrame and newFrame.Parent then
+								return newFrame:GetFullName()
 							end
 							return ""
-						end,
-						SetText = function(text)
-							if newFrame and newFrame.Parent and newFrame:FindFirstChild("ContentText") then
-								newFrame.ContentText.Text = text
-							end
-						end,
-						GetTextColor = function()
-							if newFrame and newFrame.Parent and newFrame:FindFirstChild("ContentText") then
-								return newFrame.ContentText.TextColor3
-							end
-							return Color3.fromRGB(255, 255, 255)
-						end,
-						SetTextColor = function(color)
-							if newFrame and newFrame.Parent and newFrame:FindFirstChild("ContentText") then
-								newFrame.ContentText.TextColor3 = color
-							end
-						end,
-						GetTextSize = function()
-							if newFrame and newFrame.Parent and newFrame:FindFirstChild("ContentText") then
-								return newFrame.ContentText.TextSize
-							end
-							return 14
-						end,
-						SetTextSize = function(size)
-							if newFrame and newFrame.Parent and newFrame:FindFirstChild("ContentText") then
-								newFrame.ContentText.TextSize = size
-							end
-						end,
-						SetTextAlignment = function(alignment)
-							if newFrame and newFrame.Parent and newFrame:FindFirstChild("ContentText") then
-								if alignment == "center" then
-									newFrame.ContentText.TextXAlignment = Enum.TextXAlignment.Center
-									newFrame.ContentText.TextYAlignment = Enum.TextYAlignment.Center
-								elseif alignment == "right" then
-									newFrame.ContentText.TextXAlignment = Enum.TextXAlignment.Right
-									newFrame.ContentText.TextYAlignment = Enum.TextYAlignment.Top
-								else
-									newFrame.ContentText.TextXAlignment = Enum.TextXAlignment.Left
-									newFrame.ContentText.TextYAlignment = Enum.TextYAlignment.Top
-								end
-							end
 						end,
 						Destroy = function() 
 							if newFrame and newFrame.Parent then
