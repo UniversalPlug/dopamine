@@ -2841,7 +2841,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end
 					}
 					table.insert(AllDropdowns, dropdownControl)
-
+	
 					return dropdownControl
 				end
 	
