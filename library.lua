@@ -3563,6 +3563,26 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							end
 							return ""
 						end,
+						AddText = function(text, options)
+							if not newFrame or not newFrame.Parent then return nil end
+							
+							options = options or {}
+							local textLabel = Instance.new("TextLabel")
+							textLabel.Name = "Text_" .. tostring(math.random(100000, 999999))
+							textLabel.Text = text or ""
+							textLabel.Size = options.Size or UDim2.new(1, -10, 0, 20)
+							textLabel.Position = options.Position or UDim2.new(0, 5, 0, 5)
+							textLabel.BackgroundTransparency = 1
+							textLabel.TextColor3 = options.TextColor3 or Color3.fromRGB(255, 255, 255)
+							textLabel.TextSize = options.TextSize or 14
+							textLabel.Font = options.Font or Enum.Font.SourceSans
+							textLabel.TextXAlignment = options.TextXAlignment or Enum.TextXAlignment.Left
+							textLabel.TextYAlignment = options.TextYAlignment or Enum.TextYAlignment.Center
+							textLabel.Visible = options.Visible ~= false
+							textLabel.Parent = newFrame
+							
+							return textLabel
+						end,
 						Destroy = function() 
 							if newFrame and newFrame.Parent then
 								newFrame:Destroy() 
