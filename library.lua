@@ -1646,23 +1646,23 @@ local fake_module_scripts = {}
 -- Fake Local Scripts:
 
 local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
-	local script = Instance.new("LocalScript")
-	script.Name = "UIHandler"
-	script.Parent = Converted["_Riftcore"]
-	local req = require
-	local require = function(obj)
-		local fake = fake_module_scripts[obj]
-		if fake then
-			return fake()
-		end
-		return req(obj)
-	end
+    local script = Instance.new("LocalScript")
+    script.Name = "UIHandler"
+    script.Parent = Converted["_Riftcore"]
+    local req = require
+    local require = function(obj)
+        local fake = fake_module_scripts[obj]
+        if fake then
+            return fake()
+        end
+        return req(obj)
+    end
 
 	local UIS = game:GetService("UserInputService")
 	local HttpService = game:GetService("HttpService")
 	local Players = game:GetService("Players")
 	local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
+	
 	UIS.InputBegan:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.MouseButton1 then
 			if ActiveDropdowns then
@@ -1686,28 +1686,28 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 			end
 		end
 	end)
-
+	
 	local ui = script.Parent
 	local bg = ui.Main
 	local sections = bg.Sections
-
+	
 	local Bottom = sections.Status
 	local Top = sections.Header
 	local WindowName = Top.WindowTitle
 	local LeftPanel = sections.Background.SideTab
-
+	
 	--// Misc
 	local Seperator = sections.Seperator
 	local VersionTitle = Bottom.Version
 	local StatusTitle = Bottom.Status
-
+	
 	--// Elements
 	local Elements = {
 		Window = bg,
 		FeaturesWindow = bg.Elements.FeaturesWindow,
 		KeybindsWindow = bg.Elements.KeybindsWindow,
 		WatermarkWindow = bg.Elements.WatermarkWindow,
-
+	
 		Button = bg.Elements.ButtonBG,
 		Dropdown = bg.Elements.DropDownBG,
 		Inputbox = bg.Elements.InputBoxBG,
@@ -1715,30 +1715,30 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 		Toggle = bg.Elements.ToggleBG,
 		Seperator = bg.Elements.SeperatorBG,
 		ColorPickerWindow = bg.Elements.ColorPickerWindow,
-
+	
 		KeybindWidget = bg.Elements.KeybindWidget,
 		ColorWidget = bg.Elements.ColorWidget,
-
+	
 		Tab = bg.Elements.Tab,
 		ChildWindow = bg.Elements.ChildSection,
-
+	
 		SelectedTopTab = nil,
 		UnselectedTopTabs = nil,
-
+	
 		Text = bg.Elements.TextItem,
 		Frame = bg.Elements.Frame,
 	}
-
+	
 	local Theme = {
 		Accent = Color3.fromRGB(255,255,255),
 		ChildWindows = Color3.fromRGB(255,255,255),
 		Background = Color3.fromRGB(255,255,255),
 	}
-
+	
 	local TabArea = LeftPanel.TabArea
 	local RightSectionArea = sections.Background.RightSections
 	local LeftSectionArea = sections.Background.LeftSections
-
+	
 	local AllToggles = {}
 	local AllSliders = {}
 	local AllDropdowns = {}
@@ -1750,13 +1750,13 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 	local SubTabs = {}
 	local ChildWindows = {}
 	local ActiveDropdowns = {}
-
+	
 	local CurrentConfig = {}
 	local AvailableConfigs = {}
 	local ConfigInputs = {}
 	local ConfigDropdowns = {}
 	local SelectedConfigName = ""
-
+		
 	local function SaveConfigToFile(configName, configData)
 		local configString = HttpService:JSONEncode(configData)
 		local filePath = "Dopamine/" .. configName .. ".json"
@@ -1771,22 +1771,22 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 
 		return success, error
 	end
-
+	
 	local function LoadConfigFromFile(configName)
 		local filePath = "Dopamine/" .. configName .. ".json"
-
+	
 		local success, fileContent = pcall(function()
 			return readfile(filePath)
 		end)
-
+	
 		if not success then
 			return nil
 		end
-
+	
 		local success2, configData = pcall(function()
 			return HttpService:JSONDecode(fileContent)
 		end)
-
+	
 		if success2 then
 			return configData
 		else
@@ -1794,50 +1794,50 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 			return nil
 		end
 	end
-
+	
 	local function getConfigs()
-		local configNames = {}
-
-		-- Try to list files in the Dopamine directory
-		local success, files = pcall(function()
-			if listfiles then
-				return listfiles("Dopamine")
-			else
-				return nil
-			end
-		end)
-
-		if success and files then
-			for _, filePath in ipairs(files) do
-				local fileName = filePath:match("[/\\]([^/\\]+)%.json$")
-				if fileName then
-					table.insert(configNames, fileName)
-				end
-			end
-		else
-			warn("listfiles function not available or Dopamine folder not found.")
-		end
-
-		return configNames
-	end
-
+        local configNames = {}
+    
+        -- Try to list files in the Dopamine directory
+        local success, files = pcall(function()
+            if listfiles then
+                return listfiles("Dopamine")
+            else
+                return nil
+            end
+        end)
+    
+        if success and files then
+            for _, filePath in ipairs(files) do
+                local fileName = filePath:match("[/\\]([^/\\]+)%.json$")
+                if fileName then
+                    table.insert(configNames, fileName)
+                end
+            end
+        else
+            warn("listfiles function not available or Dopamine folder not found.")
+        end
+    
+        return configNames
+    end
+	
 	local function DeleteConfigFile(configName)
 		local filePath = "Dopamine/" .. configName .. ".json"
-
+	
 		local success = pcall(function()
 			delfile(filePath)
 		end)
-
+	
 		return success
 	end
-
+	
 	local function UpdateConfigDropdown()
 		if ConfigDropdowns.configList and ConfigDropdowns.configList.SetValues then
 			local configs = getConfigs()
 			ConfigDropdowns.configList.SetValues(configs)
 		end
 	end
-
+	
 	local function CaptureCurrentConfig()
 		local config = {
 			toggles = {},
@@ -1847,86 +1847,86 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 			keybinds = {},
 			colorPickers = {}
 		}
-
+	
 		for i, toggle in ipairs(AllToggles) do
 			if toggle.isOn and toggle.SetState then
 				config.toggles["toggle_" .. i] = toggle.isOn()
 			end
 		end
-
+	
 		for i, slider in ipairs(AllSliders) do
 			if slider.GetValue then
 				config.sliders["slider_" .. i] = slider.GetValue()
 			end
 		end
-
+	
 		for i, dropdown in ipairs(AllDropdowns) do
 			if dropdown.GetSelected then
 				config.dropdowns["dropdown_" .. i] = dropdown.GetSelected()
 			end
 		end
-
+	
 		for i, input in ipairs(AllInputs) do
 			if input.GetValue then
 				config.inputs["input_" .. i] = input.GetValue()
 			end
 		end
-
+	
 		for i, keybind in ipairs(AllKeybinds) do
 			if keybind.GetKey then
 				config.keybinds["keybind_" .. i] = keybind.GetKey()
 			end
 		end
-
+	
 		for i, colorPicker in ipairs(AllColorPickers) do
 			if colorPicker.GetColor then
 				config.colorPickers["colorPicker_" .. i] = colorPicker.GetColor()
 			end
 		end
-
+	
 		return config
 	end
-
+	
 	local function ApplyConfig(config)
 		if not config then return end
-
+	
 		for i, toggle in ipairs(AllToggles) do
 			if toggle.SetState and config.toggles["toggle_" .. i] ~= nil then
 				toggle.SetState(config.toggles["toggle_" .. i])
 			end
 		end
-
+	
 		for i, slider in ipairs(AllSliders) do
 			if slider.SetValue and config.sliders["slider_" .. i] ~= nil then
 				slider.SetValue(config.sliders["slider_" .. i])
 			end
 		end
-
+	
 		for i, dropdown in ipairs(AllDropdowns) do
 			if dropdown.SetSelected and config.dropdowns["dropdown_" .. i] ~= nil then
 				dropdown.SetSelected(config.dropdowns["dropdown_" .. i])
 			end
 		end
-
+	
 		for i, input in ipairs(AllInputs) do
 			if input.SetValue and config.inputs["input_" .. i] ~= nil then
 				input.SetValue(config.inputs["input_" .. i])
 			end
 		end
-
+	
 		for i, keybind in ipairs(AllKeybinds) do
 			if keybind.SetKey and config.keybinds["keybind_" .. i] ~= nil then
 				keybind.SetKey(config.keybinds["keybind_" .. i])
 			end
 		end
-
+	
 		for i, colorPicker in ipairs(AllColorPickers) do
 			if colorPicker.SetColor and config.colorPickers["colorPicker_" .. i] ~= nil then
 				colorPicker.SetColor(config.colorPickers["colorPicker_" .. i])
 			end
 		end
 	end
-
+	
 	local function SaveConfig(configName)
 		if not configName or configName == "" or configName == "--" then
 			local randomName = ""
@@ -1936,10 +1936,10 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 			configName = randomName
 			print("Generated random config name: " .. configName)
 		end
-
+	
 		local config = CaptureCurrentConfig()
 		local success, error = SaveConfigToFile(configName, config)
-
+	
 		if success then
 			print("Config saved successfully: " .. configName)
 			UpdateConfigDropdown()
@@ -1950,34 +1950,34 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 			end
 		end
 	end
-
+	
 	local function LoadConfig(configName)
 		if not configName or configName == "" then
 			print("Please select a config to load!")
 			return
 		end
-
+	
 		local config = LoadConfigFromFile(configName)
 		if not config then
 			print("Config '" .. configName .. "' does not exist!")
 			return
 		end
-
+	
 		ApplyConfig(config)
 		print("Loaded config: " .. configName)
 	end
-
+	
 	local function MakeUIDraggable(dragObject, dragArea)
 		local dragging
 		local dragStart
 		local startPos
 		local inputChangedConnection
-
+	
 		local function update(input)
 			local delta = input.Position - dragStart
 			dragObject.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
 		end
-
+	
 		local function isDescendantOfClass(object, className)
 			if object:IsA(className) then
 				return true
@@ -1987,7 +1987,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 			end
 			return false
 		end
-
+	
 		local function shouldIgnoreDrag(input)
 			local ignoreClasses = {
 				"TextBox",
@@ -1997,15 +1997,15 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 				"Dropdown",
 				"ColorPicker"
 			}
-
+	
 			local mouseLocation = UIS:GetMouseLocation()
 			local guiObjects = dragArea:GetDescendants()
-
+	
 			for _, obj in ipairs(guiObjects) do
 				if obj:IsA("GuiObject") then
 					local objPosition = obj.AbsolutePosition
 					local objSize = obj.AbsoluteSize
-
+	
 					if mouseLocation.X >= objPosition.X and mouseLocation.X <= objPosition.X + objSize.X and
 						mouseLocation.Y >= objPosition.Y and mouseLocation.Y <= objPosition.Y + objSize.Y then
 						if table.find(ignoreClasses, obj.ClassName) or obj:GetAttribute("NoDrag") then
@@ -2021,7 +2021,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 			end
 			return false
 		end
-
+	
 		dragArea.InputBegan:Connect(function(input)
 			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 				if shouldIgnoreDrag(input) then
@@ -2030,7 +2030,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 				dragging = true
 				dragStart = input.Position
 				startPos = dragObject.Position
-
+	
 				input.Changed:Connect(function()
 					if input.UserInputState == Enum.UserInputState.End then
 						dragging = false
@@ -2042,7 +2042,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 				end)
 			end
 		end)
-
+	
 		dragArea.InputChanged:Connect(function(input)
 			if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
 				if dragging then
@@ -2051,16 +2051,16 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 			end
 		end)
 	end
-
+	
 	local function CreateWindow(params)
 		local newWindow = Elements.Window
 		newWindow.Sections.Header.WindowTitle.Text = params.Title or "Riftcore | Fallen"
 		VersionTitle.Text = params.Version or "live"
 		StatusTitle.Text = params.Detection or "Detected"
-
+	
 		local tabSections = {}  
 		local currentActiveTab = nil
-
+	
 		local function UpdateTabColors(activeTab)
 			for _, tab in pairs(TabArea:GetChildren()) do
 				if tab:IsA("GuiObject") then
@@ -2078,23 +2078,23 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 				end
 			end
 		end
-
+	
 		local function ShowTab(tabTitle)
 			for _, sections in pairs(tabSections) do
 				for _, section in ipairs(sections) do
 					section.Visible = false
 				end
 			end
-
+	
 			if tabSections[tabTitle] then
 				for _, section in ipairs(tabSections[tabTitle]) do
 					section.Visible = true
 				end
 			end
-
+	
 			UpdateTabColors(tabTitle)
 			currentActiveTab = tabTitle
-
+	
 			local colorPickerWindows = sections.Background:GetDescendants()
 			for _, child in ipairs(colorPickerWindows) do
 				if child.Name == "ColorPickerWindow" and child.Visible then
@@ -2102,12 +2102,12 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 				end
 			end
 		end
-
+	
 		MakeUIDraggable(newWindow, Top)   
-
+	
 		return {
 			Window = newWindow,
-
+	
 			AddTab = function(self, title)
 				local newTab = Elements.Tab:Clone()
 				newTab.Title.Text = title
@@ -2115,28 +2115,28 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 				newTab.Color.BackgroundColor3 = Color3.fromRGB(90, 90, 90)  
 				newTab.UIGradient.Enabled = false
 				newTab.BackgroundColor3 = Color3.fromRGB(2,2,2)
-
+	
 				newTab.Button.MouseButton1Click:Connect(function()
 					ShowTab(title)
 				end)
-
+	
 				newTab.Parent = TabArea
 				newTab.Visible = true
-
+	
 				tabSections[title] = {} 
-
+	
 				if not currentActiveTab then
 					ShowTab(title)
 				end
-
+	
 				return title
 			end,
-
+	
 			AddSection = function(self, title, leftorright, tabTitle)
 				local newSection = Elements.ChildWindow:Clone()
 				newSection.TitleArea.Title.Text = title
 				newSection.Visible = false
-
+	
 				if leftorright == "left" then 
 					newSection.Parent = LeftSectionArea
 				elseif leftorright == "right" then 
@@ -2145,7 +2145,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					warn('Side not specified, section not added.')
 					return nil
 				end
-
+	
 				if tabSections[tabTitle] then
 					table.insert(tabSections[tabTitle], newSection)
 					if currentActiveTab == tabTitle then
@@ -2154,55 +2154,55 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 				else
 					warn("Tab does not exist: " .. tabTitle)
 				end
-
+	
 				local wrappedSection = {
 					Instance = newSection
 				}
-
+	
 				function wrappedSection:updateObjectAreaSize()
 					if self.Instance then
 						local totalHeight = 0
 						local children = self.Instance:GetChildren()
 						local guiChildren = {}
-
+	
 						for _, child in ipairs(children) do
 							if child:IsA("GuiObject") and child.Visible then
 								table.insert(guiChildren, child)
 							end
 						end
-
+	
 						for i, child in ipairs(guiChildren) do
 							totalHeight = totalHeight + child.AbsoluteSize.Y
 							if i < #guiChildren then
 								totalHeight = totalHeight + 3
 							end
 						end
-
+	
 						self.Instance.Size = UDim2.new(1, 0, 0, totalHeight)
 					end
 				end
-
+	
 				local function setupAutoSizeListener()
 					if wrappedSection.Instance then
 						local connection
-
+	
 						local function updateSize()
 							wrappedSection:updateObjectAreaSize()
 						end
-
+	
 						connection = wrappedSection.Instance.ChildAdded:Connect(function(child)
 							if child:IsA("GuiObject") then
 								game:GetService("RunService").Heartbeat:Wait()
 								updateSize()
 							end
 						end)
-
+	
 						wrappedSection.Instance.ChildRemoved:Connect(function(child)
 							if child:IsA("GuiObject") then
 								updateSize()
 							end
 						end)
-
+	
 						for _, existingChild in ipairs(wrappedSection.Instance:GetChildren()) do
 							if existingChild:IsA("GuiObject") then
 								existingChild:GetPropertyChangedSignal("Visible"):Connect(updateSize)
@@ -2211,30 +2211,30 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						wrappedSection._sizeConnection = connection
 					end
 				end
-
+	
 				setupAutoSizeListener()
-
+	
 				function wrappedSection:AddButton(options)
 					local title = options.Text or "Button"
 					local callback = options.Callback or function() end
-
+	
 					local TweenService = game:GetService("TweenService")
-
+	
 					local newButton = Elements.Button:Clone()
 					newButton.Visible = true
 					newButton.Parent = self.Instance
-
+	
 					if wrappedSection._sizeConnection then
 						newButton:GetPropertyChangedSignal("Visible"):Connect(function()
 							wrappedSection:updateObjectAreaSize()
 						end)
 					end
 					newButton.Button.Text = title
-
+	
 					local originalSize = newButton.Button.Size
 					local buttonsFrame = newButton.Button.Parent.Buttons
 					local originalColor = buttonsFrame.BackgroundColor3
-
+	
 					newButton.Button.MouseButton1Down:Connect(function()
 						local pressTween = TweenService:Create(buttonsFrame, 
 							TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), 
@@ -2242,7 +2242,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						)
 						pressTween:Play()
 					end)
-
+	
 					newButton.Button.MouseButton1Up:Connect(function()
 						local releaseTween = TweenService:Create(buttonsFrame, 
 							TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), 
@@ -2250,38 +2250,38 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						)
 						releaseTween:Play()
 					end)
-
+	
 					newButton.Button.MouseButton1Click:Connect(function()
 						callback(true)
 					end)
-
+	
 					return newButton
 				end
-
+	
 				function wrappedSection:AddToggle(options)
 					local title = options.Text or ""
 					local callback = options.Callback or function() end
 					local defaultState = options.Default or false
-
+	
 					local TweenService = game:GetService("TweenService")
-
+	
 					local newToggle = Elements.Toggle:Clone()
 					newToggle.Visible = true
 					newToggle.Parent = self.Instance
-
+	
 					if wrappedSection._sizeConnection then
 						newToggle:GetPropertyChangedSignal("Visible"):Connect(function()
 							wrappedSection:updateObjectAreaSize()
 						end)
 					end
 					newToggle.Title.Text = title
-
+	
 					local isOn = defaultState
-
+	
 					newToggle.Button.On.Enabled = isOn
 					newToggle.Button.Off.Enabled = not isOn
 					newToggle.Title.TextColor3 = isOn and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(128, 128, 128)
-
+	
 					local function updateTitleColor(state)
 						if not newToggle or not newToggle.Parent or not newToggle:FindFirstChild("Title") then
 							return
@@ -2291,9 +2291,9 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						local tween = TweenService:Create(newToggle.Title, tweenInfo, {TextColor3 = targetColor})
 						tween:Play()
 					end
-
+	
 					local colorPickers = {}
-
+	
 					local function updateColorPickers()
 						for _, colorPicker in pairs(colorPickers) do
 							if colorPicker and colorPicker.Parent then
@@ -2304,28 +2304,28 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							end
 						end
 					end
-
+	
 					newToggle.Button.MouseButton1Click:Connect(function()
 						isOn = not isOn
-
+	
 						newToggle.Button.On.Enabled = isOn
 						newToggle.Button.Off.Enabled = not isOn
 						updateTitleColor(isOn)
 						updateColorPickers()
-
+	
 						callback(isOn)
 					end)
-
+	
 					local toggleControl = {
 						isOn = function() return isOn end,
 						SetState = function(state)
 							isOn = state
-
+	
 							newToggle.Button.On.Enabled = isOn
 							newToggle.Button.Off.Enabled = not isOn
 							updateTitleColor(isOn)
 							updateColorPickers()
-
+	
 							callback(isOn)
 						end,
 						AddKeybind = function(keybindOptions)
@@ -2334,31 +2334,31 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 								isOn = function() return isOn end,
 								SetState = function(state)
 									isOn = state
-
+	
 									newToggle.Button.On.Enabled = isOn
 									newToggle.Button.Off.Enabled = not isOn
 									updateTitleColor(isOn)
-
+	
 									callback(isOn)
 								end
 							})
-
+	
 							if keybind then
 								keybind.AnchorPoint = Vector2.new(1, 0.5)
 								keybind.Position = UDim2.new(1, 0, 0.5, 0)
 							end
-
+	
 							return keybind
 						end,
 						AddColorPicker = function(self, colorPickerOptions)
 							if not colorPickerOptions then
 								return newToggle
 							end
-
+	
 							colorPickerOptions.Parent = newToggle
-
+	
 							local originalCallback = colorPickerOptions.Callback
-
+	
 							local modifiedOptions = {
 								Text = colorPickerOptions.Text,
 								Default = colorPickerOptions.Default,
@@ -2369,9 +2369,9 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 									end
 								end
 							}
-
+	
 							local colorPicker = wrappedSection:AddColorPicker(modifiedOptions)
-
+	
 							table.insert(colorPickers, colorPicker)
 							updateColorPickers()
 							return colorPicker
@@ -2380,7 +2380,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					table.insert(AllToggles, toggleControl)
 					return toggleControl
 				end
-
+	
 				function wrappedSection:AddSlider(options)
 					local title = options.Text or "Slider"
 					local callback = options.Callback or function() end
@@ -2391,11 +2391,11 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 
 					local UIS = game:GetService("UserInputService")
 					local TweenService = game:GetService("TweenService")
-
+	
 					local newSlider = Elements.Slider:Clone()
 					newSlider.Visible = true
 					newSlider.Parent = self.Instance
-
+	
 					if wrappedSection._sizeConnection then
 						newSlider:GetPropertyChangedSignal("Visible"):Connect(function()
 							wrappedSection:updateObjectAreaSize()
@@ -2403,14 +2403,14 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					end
 					newSlider.Title.Text = title
 					newSlider.Title.TextColor3 = Color3.fromRGB(128, 128, 128)
-
+	
 					local fill = newSlider.Slider.Fill
 					local inputBox = newSlider.Percentage
 					newSlider.Negative.Text = tostring(min)
 					newSlider.Positive.Text = tostring(max)
-
+	
 					local dragging = false
-
+	
 					local function updateTitleColor(isDragging)
 						if not newSlider or not newSlider.Parent or not newSlider:FindFirstChild("Title") then
 							return
@@ -2420,7 +2420,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						local tween = TweenService:Create(newSlider.Title, tweenInfo, {TextColor3 = targetColor})
 						tween:Play()
 					end
-
+	
 					local function roundToStep(value, step)
 						local rounded = math.floor((value / step) + 0.5) * step
 						if step >= 1 then
@@ -2428,13 +2428,13 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end
 						return tonumber(string.format("%." .. tostring(math.log10(1 / step)) .. "f", rounded))
 					end
-
+	
 					local function clampAndRound(value)
 						value = tonumber(value) or min
 						value = math.clamp(value, min, max)
 						return roundToStep(value, step)
 					end
-
+	
 					local function updateSlider(value)
 						if not newSlider or not newSlider.Parent then
 							return
@@ -2445,7 +2445,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						inputBox.Text = tostring(value)
 						callback(value)
 					end
-
+	
 					local function getSliderValueFromPosition(x)
 						if not newSlider or not newSlider.Parent or not newSlider:FindFirstChild("Slider") then
 							return min
@@ -2457,7 +2457,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						local rawValue = min + percent * (max - min)
 						return rawValue
 					end
-
+	
 					newSlider.Slider.InputBegan:Connect(function(input)
 						if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 							dragging = true
@@ -2465,20 +2465,20 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							updateSlider(getSliderValueFromPosition(input.Position.X))
 						end
 					end)
-
+	
 					UIS.InputChanged:Connect(function(input)
 						if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
 							updateSlider(getSliderValueFromPosition(input.Position.X))
 						end
 					end)
-
+	
 					UIS.InputEnded:Connect(function(input)
 						if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 							dragging = false
 							updateTitleColor(false)
 						end
 					end)
-
+	
 					inputBox.FocusLost:Connect(function(enterPressed)
 						if enterPressed then
 							local typed = tonumber(inputBox.Text)
@@ -2489,9 +2489,9 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							end
 						end
 					end)
-
+	
 					updateSlider(defaultState)
-
+	
 					local sliderControl = {
 						Instance = newSlider,
 						GetValue = function() 
@@ -2508,10 +2508,10 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end
 					}
 					table.insert(AllSliders, sliderControl)
-
+	
 					return newSlider
 				end
-
+	
 				function wrappedSection:AddInput(options)
 					local title = options.Text or "Inputbox"
 					local callback = options.Callback or function() end
@@ -2519,13 +2519,13 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					local placeholder = options.Placeholder or ""
 					local isNumeric = options.Numeric or false
 					local finished = options.Finished or false
-
+	
 					local TweenService = game:GetService("TweenService")
-
+	
 					local newInputbox = Elements.Inputbox:Clone()
 					newInputbox.Visible = true
 					newInputbox.Parent = self.Instance
-
+	
 					if wrappedSection._sizeConnection then
 						newInputbox:GetPropertyChangedSignal("Visible"):Connect(function()
 							wrappedSection:updateObjectAreaSize()
@@ -2534,7 +2534,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					newInputbox.Title.Text = title
 					newInputbox.Title.TextColor3 = Color3.fromRGB(128, 128, 128)
 					local textBox = newInputbox.TextBox  
-
+	
 					local function updateTitleColor(isFocused)
 						if not newInputbox or not newInputbox.Parent or not newInputbox:FindFirstChild("Title") then
 							return
@@ -2544,7 +2544,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						local tween = TweenService:Create(newInputbox.Title, tweenInfo, {TextColor3 = targetColor})
 						tween:Play()
 					end
-
+	
 					if isNumeric then
 						textBox:GetPropertyChangedSignal("Text"):Connect(function()
 							local text = textBox.Text
@@ -2553,44 +2553,44 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							end
 						end)
 					end
-
+	
 					textBox.Focused:Connect(function()
 						updateTitleColor(true)
 					end)
-
+	
 					textBox.FocusLost:Connect(function(enterPressed)
 						updateTitleColor(false)
 						if enterPressed then
 							callback(textBox.Text)
 						end
 					end)
-
+	
 					textBox.PlaceholderText = placeholder
 					textBox.Text = defaultText
-
+	
 					local inputControl = {
 						Instance = newInputbox,
 						GetValue = function() return textBox.Text end,
 						SetValue = function(value) textBox.Text = tostring(value) end
 					}
 					table.insert(AllInputs, inputControl)
-
+	
 					return newInputbox
 				end
-
+	
 				function wrappedSection:AddDropdown(options)
 					local title = options.Text or "Dropdown"
 					local callback = options.Callback or function() end
 					local values = options.Values or {}
 					local default = options.Default or values[1] or ""
 					local multi = options.Multi or false
-
+	
 					local TweenService = game:GetService("TweenService")
-
+	
 					local newDropdown = Elements.Dropdown:Clone()
 					newDropdown.Visible = true
 					newDropdown.Parent = self.Instance
-
+	
 					if wrappedSection._sizeConnection then
 						newDropdown:GetPropertyChangedSignal("Visible"):Connect(function()
 							wrappedSection:updateObjectAreaSize()
@@ -2598,23 +2598,23 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 					end
 					newDropdown.Title.Text = title
 					newDropdown.Title.TextColor3 = Color3.fromRGB(128, 128, 128)
-
+	
 					local selectedItem = newDropdown.Dropdown.SelectedItem
 					local status = newDropdown.Status
 					local dropdownList = newDropdown.Dropdown.ScrollingFrame
 					local toggleButton = newDropdown.Button
-
+	
 					local isOpen = false
 					local fixedHeight = 20
 					local selectedValues = {}
-
+	
 					local function updateTitleColor(isOpen)
 						local targetColor = isOpen and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(128, 128, 128)
 						local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 						local tween = TweenService:Create(newDropdown.Title, tweenInfo, {TextColor3 = targetColor})
 						tween:Play()
 					end
-
+	
 					local function updateSelectedText()
 						if #selectedValues == 0 then
 							selectedItem.Text = "--"  
@@ -2628,7 +2628,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 								end
 							end
 							local fullText = table.concat(displayText, ", ")
-
+	
 							local maxChars = 40
 							if #fullText > maxChars then
 								local truncatedText = fullText:sub(1, maxChars - 3)
@@ -2642,7 +2642,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							end
 						end
 					end
-
+	
 					local function toggleDropdown()
 						if not isOpen then
 							for _, dropdown in pairs(ActiveDropdowns) do
@@ -2663,12 +2663,12 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							end
 							ActiveDropdowns = {}
 						end
-
+	
 						isOpen = not isOpen
 						dropdownList.Visible = isOpen
 						status.Text = isOpen and "-" or "+"
 						updateTitleColor(isOpen)
-
+	
 						if isOpen then
 							table.insert(ActiveDropdowns, newDropdown)
 							newDropdown.ZIndex = 9999
@@ -2684,23 +2684,23 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							dropdownList.ZIndex = 1
 						end
 					end
-
+	
 					toggleButton.MouseButton1Click:Connect(function()
 						toggleDropdown()
 					end)
-
+	
 					local itemButtons = {}
-
+	
 					for _, value in ipairs(values) do
 						local itemButton = newDropdown.Button:Clone()
 						itemButton.Parent = dropdownList
 						itemButton.Text = tostring(value)
 						itemButton.Visible = true
 						itemButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-
+	
 						itemButton.MouseButton1Click:Connect(function()
 							local valueStr = tostring(value)
-
+	
 							if multi then
 								local index = table.find(selectedValues, valueStr)
 								if index then
@@ -2720,7 +2720,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 								callback(selectedValues)
 								toggleDropdown()
 							end
-
+	
 							for _, btn in pairs(itemButtons) do
 								if table.find(selectedValues, btn.Text) then
 									btn.TextColor3 = Color3.fromRGB(120, 167, 255)
@@ -2729,12 +2729,12 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 								end
 							end
 						end)
-
+	
 						table.insert(itemButtons, itemButton)
 					end
-
+	
 					dropdownList.CanvasSize = UDim2.new(0, 0, 0, #values * fixedHeight)
-
+	
 					if #values > 5 then
 						dropdownList.Size = UDim2.new(1, 0, 0, 5 * fixedHeight)
 						dropdownList.ScrollBarThickness = 6
@@ -2742,7 +2742,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						dropdownList.Size = UDim2.new(1, 0, 0, #values * fixedHeight)
 						dropdownList.ScrollBarThickness = 0
 					end
-
+	
 					if multi then
 						if typeof(default) == "table" then
 							selectedValues = default
@@ -2754,17 +2754,17 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							selectedValues = { tostring(default) }
 						end
 					end
-
+	
 					updateSelectedText()
-
+	
 					for _, btn in pairs(itemButtons) do
 						if table.find(selectedValues, btn.Text) then
 							btn.BackgroundColor3 = Color3.fromRGB(120, 167, 255)
 						end
 					end
-
+	
 					status.Text = "+"
-
+	
 					local dropdownControl = {
 						Instance = newDropdown,
 						GetSelected = function() return selectedValues end,
@@ -2780,10 +2780,10 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 								end
 							end
 							itemButtons = {}
-
+	
 							-- Update values
 							values = newValues or {}
-
+	
 							-- Recreate item buttons
 							for _, value in ipairs(values) do
 								local itemButton = newDropdown.Button:Clone()
@@ -2791,10 +2791,10 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 								itemButton.Text = tostring(value)
 								itemButton.Visible = true
 								itemButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-
+	
 								itemButton.MouseButton1Click:Connect(function()
 									local valueStr = tostring(value)
-
+	
 									if multi then
 										local index = table.find(selectedValues, valueStr)
 										if index then
@@ -2814,7 +2814,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 										callback(selectedValues)
 										toggleDropdown()
 									end
-
+	
 									for _, btn in pairs(itemButtons) do
 										if table.find(selectedValues, btn.Text) then
 											btn.TextColor3 = Color3.fromRGB(120, 167, 255)
@@ -2823,10 +2823,10 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 										end
 									end
 								end)
-
+	
 								table.insert(itemButtons, itemButton)
 							end
-
+	
 							-- Update dropdown size
 							dropdownList.CanvasSize = UDim2.new(0, 0, 0, #values * fixedHeight)
 							if #values > 5 then
@@ -2839,65 +2839,65 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end
 					}
 					table.insert(AllDropdowns, dropdownControl)
-
+	
 					return dropdownControl
 				end
-
+	
 				function wrappedSection:AddSeperator(title)
 					local newSeperator = Elements.Seperator:Clone()
 					newSeperator.Visible = true
 					newSeperator.Parent = self.Instance
-
+	
 					if wrappedSection._sizeConnection then
 						newSeperator:GetPropertyChangedSignal("Visible"):Connect(function()
 							wrappedSection:updateObjectAreaSize()
 						end)
 					end
 					newSeperator.Title.Text = title
-
+	
 					return newSeperator
 				end
-
+	
 				function wrappedSection:AddText(options)
 					local title = options[1] or options.Text or "Text"
-
+	
 					local newText = Elements.Text:Clone()
 					newText.Visible = true
 					newText.Parent = self.Instance
-
+	
 					if wrappedSection._sizeConnection then
 						newText:GetPropertyChangedSignal("Visible"):Connect(function()
 							wrappedSection:updateObjectAreaSize()
 						end)
 					end
-
+	
 					newText.Text = title
-
+	
 					local textControl = {
 						Instance = newText,
 						AddToggle = function(self, toggleOptions)
 							local toggle = Elements.Toggle:Clone()
 							toggle.Visible = true
 							toggle.Parent = newText
-
+	
 							toggle.AnchorPoint = Vector2.new(1, 0.5)
 							toggle.Position = UDim2.new(1, -10, 0.5, 0)
 							toggle.Size = UDim2.new(0, 30, 0, 16)
-
+	
 							local callback = toggleOptions.Callback or function() end
 							local defaultState = toggleOptions.Default or false
 							local isOn = defaultState
-
+	
 							toggle.Button.On.Enabled = isOn
 							toggle.Button.Off.Enabled = not isOn
-
+	
 							toggle.Button.MouseButton1Click:Connect(function()
 								isOn = not isOn
 								toggle.Button.On.Enabled = isOn
 								toggle.Button.Off.Enabled = not isOn
 								callback(isOn)
 							end)
-
+	
 							local toggleControl = {
 								isOn = function() return isOn end,
 								SetState = function(state)
@@ -2907,85 +2907,85 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 									callback(isOn)
 								end
 							}
-
+	
 							table.insert(AllToggles, toggleControl)
 							return toggleControl
 						end,
 						AddColorPicker = function(self, colorPickerOptions)
 							colorPickerOptions.Parent = newText
 							local colorPicker = wrappedSection:AddColorPicker(colorPickerOptions)
-
+	
 							if colorPicker then
 								colorPicker.AnchorPoint = Vector2.new(1, 0.5)
 								colorPicker.Position = UDim2.new(1, 0, 0.5, 0)
 							end
-
+	
 							return colorPicker
 						end,
 						AddKeybind = function(self, keybindOptions)
 							keybindOptions.Parent = newText
 							local keybind = wrappedSection:AddKeybind(keybindOptions)
-
+	
 							if keybind then
 								keybind.AnchorPoint = Vector2.new(1, 0.5)
 								keybind.Position = UDim2.new(1, -10, 0.5, 0)
 								keybind.Size = UDim2.new(0, 27, 0, 12)
 							end
-
+	
 							return keybind
 						end
 					}
-
+	
 					return textControl
 				end
-
+	
 				function wrappedSection:AddKeybind(options, toggle)
 					local title = options.Text or "Keybind"
 					local callback = options.Callback or function() end
 					local defaultKey = options.Default or "Z"
 					local mode = options.Mode or "Hold"
-
+	
 					local blacklistedKeys = {
 						"W", "A", "S", "D",
 						"MouseButton1"
 					}
-
+	
 					local newKeybind = Elements.KeybindWidget:Clone()
 					newKeybind.Visible = true
 					newKeybind.ZIndex = 99999
 					newKeybind.Parent = options.Parent or self.Instance
-
+	
 					if wrappedSection._sizeConnection then
 						newKeybind:GetPropertyChangedSignal("Visible"):Connect(function()
 							wrappedSection:updateObjectAreaSize()
 						end)
 					end
-
+	
 					local keyTextBox = newKeybind 
 					keyTextBox.Text = string.sub(defaultKey, 1, 3)
-
+	
 					local isHolding = false
 					local selectedKey = defaultKey
-
+	
 					local inputConnection
-
+	
 					local modes = {"Always", "Hold", "Toggle"}
 					local currentModeIndex = table.find(modes, mode) or 2
-
+	
 					local modeFrame = newKeybind:FindFirstChild("Mode")
 					if modeFrame then
 						local modeLabels = {}
 						local labelMap = {} 
-
+	
 						for _, child in ipairs(modeFrame:GetChildren()) do
 							if child:IsA("TextLabel") then
 								table.insert(modeLabels, child)
 								labelMap[child.Text] = #modeLabels
 							end
 						end
-
+	
 						modeFrame.Visible = false
-
+	
 						for i, label in ipairs(modeLabels) do
 							label.Visible = true
 							label.ZIndex = 99999
@@ -2996,41 +2996,41 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 								label.TextColor3 = Color3.fromRGB(128, 128, 128) 
 							end
 						end
-
+	
 						newKeybind.MouseEnter:Connect(function()
 							modeFrame.Visible = true
 							modeFrame.ZIndex = 99999
 							newKeybind.ZIndex = 99999
-
+	
 							local originalParent = modeFrame.Parent
 							modeFrame.Parent = sections.Background
-
+	
 							local keybindPos = newKeybind.AbsolutePosition
 							local keybindSize = newKeybind.AbsoluteSize
 							local parentPos = sections.Background.AbsolutePosition
-
+	
 							local relativeX = keybindPos.X - parentPos.X
 							local relativeY = keybindPos.Y - parentPos.Y + keybindSize.Y + 2
-
+	
 							modeFrame.Position = UDim2.new(0, relativeX, 0, relativeY)
 						end)
-
+	
 						newKeybind.MouseLeave:Connect(function()
 							modeFrame.Visible = false
 							if modeFrame.Parent == sections.Background then
 								modeFrame.Parent = newKeybind
 							end
 						end)
-
+	
 						newKeybind.InputBegan:Connect(function(input)
 							if input.UserInputType == Enum.UserInputType.MouseButton2 then
 								currentModeIndex = currentModeIndex + 1
 								if currentModeIndex > #modes then
 									currentModeIndex = 1
 								end
-
+	
 								mode = modes[currentModeIndex]
-
+	
 								for _, label in ipairs(modeLabels) do
 									if label.Text == mode then
 										label.TextColor3 = Color3.fromRGB(120, 167, 255)
@@ -3041,7 +3041,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							end
 						end)
 					end
-
+	
 					local function onInputBegan(input)
 						if input.UserInputType == Enum.UserInputType.Keyboard then
 							if input.KeyCode.Name == selectedKey then
@@ -3066,8 +3066,8 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							end
 						end
 					end
-
-
+	
+	
 					local function onInputEnded(input)
 						if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode.Name == selectedKey then
 							if mode == "Hold" then
@@ -3079,66 +3079,66 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							end
 						end
 					end
-
+	
 					keyTextBox.Focused:Connect(function()
 						keyTextBox.Text = "..."
 						newKeybind.ZIndex = 99999
 						modeFrame.ZIndex = 99999
-
+	
 						if modeFrame.Parent ~= sections.Background then
 							modeFrame.Parent = sections.Background
-
+	
 							local keybindPos = newKeybind.AbsolutePosition
 							local keybindSize = newKeybind.AbsoluteSize
 							local parentPos = sections.Background.AbsolutePosition
-
+	
 							local relativeX = keybindPos.X - parentPos.X
 							local relativeY = keybindPos.Y - parentPos.Y + keybindSize.Y + 2
-
+	
 							modeFrame.Position = UDim2.new(0, relativeX, 0, relativeY)
 						end
-
+	
 						inputConnection = UIS.InputBegan:Connect(function(input)
 							if input.UserInputType == Enum.UserInputType.Keyboard then
 								local keyName = input.KeyCode.Name
-
+	
 								if table.find(blacklistedKeys, keyName) then
 									keyTextBox:ReleaseFocus()
 									return
 								end
-
+	
 								selectedKey = keyName
 								keyTextBox.Text = string.sub(selectedKey, 1, 3)
-
+	
 								if mode ~= "Toggle" then
 									callback(selectedKey)
 								end
-
+	
 								if inputConnection then
 									inputConnection:Disconnect()
 									inputConnection = nil
 								end
-
+	
 								keyTextBox:ReleaseFocus()
 							end
 						end)
 					end)
-
+	
 					keyTextBox.FocusLost:Connect(function()
 						if inputConnection then
 							inputConnection:Disconnect()
 							inputConnection = nil
 						end
 						keyTextBox.Text = string.sub(selectedKey, 1, 3)
-
+	
 						if modeFrame.Parent == sections.Background then
 							modeFrame.Parent = newKeybind
 						end
 					end)
-
+	
 					UIS.InputBegan:Connect(onInputBegan)
 					UIS.InputEnded:Connect(onInputEnded)
-
+	
 					local keybindControl = {
 						Instance = newKeybind,
 						GetKey = function() return selectedKey end,
@@ -3148,37 +3148,37 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end
 					}
 					table.insert(AllKeybinds, keybindControl)
-
+	
 					return newKeybind
 				end
-
+	
 				function wrappedSection:AddColorPicker(options)
 					local title = options.Text or "Colorpicker"
 					local callback = options.Callback or function() end
 					local default = options.Default or Color3.fromRGB(255,255,255)				
-
+	
 					local newColorPicker = Elements.ColorWidget:Clone()
 					newColorPicker.Visible = true
 					newColorPicker.Parent = options.Parent or self.Instance
-
+	
 					if wrappedSection._sizeConnection then
 						newColorPicker:GetPropertyChangedSignal("Visible"):Connect(function()
 							wrappedSection:updateObjectAreaSize()
 						end)
 					end
-
+	
 					local newColorWindow = Elements.ColorPickerWindow:Clone()
 					local rgbInput = newColorWindow:FindFirstChild("RgbInput")
 					local hexInput = newColorWindow:FindFirstChild("HexInput")
-
+	
 					newColorWindow:FindFirstChild("TitleArea"):FindFirstChild("Status").Text = title
-
+	
 					local dragging
 					local dragInput
 					local dragStart
 					local startPos
 					local isInteractingWithColor = false
-
+	
 					newColorPicker.MouseButton1Click:Connect(function()
 						if newColorWindow.Visible then
 							newColorWindow.Visible = false
@@ -3191,29 +3191,29 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							end
 							newColorWindow.Visible = true
 							newColorWindow.Parent = sections.Background
-
+	
 							local colorPickerPos = newColorPicker.AbsolutePosition
 							local colorPickerSize = newColorPicker.AbsoluteSize
 							local parentPos = sections.Background.AbsolutePosition
-
+	
 							local relativeX = colorPickerPos.X - parentPos.X + colorPickerSize.X + 5
 							local relativeY = colorPickerPos.Y - parentPos.Y
-
+	
 							newColorWindow.Position = UDim2.new(0, relativeX, 0, relativeY)
 						end
 					end)
-
+	
 					local function update(input)
 						local delta = input.Position - dragStart
 						newColorWindow.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
 					end
-
+	
 					newColorWindow.InputBegan:Connect(function(input)
 						if not isInteractingWithColor and (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
 							dragging = true
 							dragStart = input.Position
 							startPos = newColorWindow.Position
-
+	
 							input.Changed:Connect(function()
 								if input.UserInputState == Enum.UserInputState.End then
 									dragging = false
@@ -3221,25 +3221,25 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							end)
 						end
 					end)
-
+	
 					newColorWindow.InputChanged:Connect(function(input)
 						if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
 							dragInput = input
 						end
 					end)
-
+	
 					game:GetService("UserInputService").InputChanged:Connect(function(input)
 						if input == dragInput and dragging then
 							update(input)
 						end
 					end)
-
+	
 					local function updateColorDisplay()
 						if newColorWindow then
 							newColorPicker.BackgroundColor3 = default
 						end
 					end
-
+	
 					local function updateRGBInputs()
 						if rgbInput and rgbInput:IsA("TextBox") then
 							rgbInput.Text = string.format("%d,%d,%d",
@@ -3249,7 +3249,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							)
 						end
 					end
-
+	
 					local function updateHexInput()
 						if hexInput then
 							hexInput.Text = string.format("#%02X%02X%02X",
@@ -3258,9 +3258,9 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 								math.floor(default.B * 255))
 						end
 					end
-
+	
 					local updatePickerVisuals = function() end
-
+	
 					local function updateColor(newColor)
 						default = newColor
 						updateColorDisplay()
@@ -3269,9 +3269,9 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						updatePickerVisuals()
 						callback(newColor)
 					end
-
+	
 					updateColor(default)
-
+	
 					if rgbInput and rgbInput:IsA("TextBox") then
 						rgbInput.Focused:Connect(function()
 							isInteractingWithColor = true
@@ -3294,7 +3294,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							end
 						end)
 					end
-
+	
 					if hexInput and hexInput:IsA("TextBox") then
 						hexInput.Focused:Connect(function()
 							isInteractingWithColor = true
@@ -3310,12 +3310,12 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							end
 						end)
 					end
-
+	
 					local colorPicker = newColorWindow:FindFirstChild("Color")
 					local huePicker = newColorWindow:FindFirstChild("RGB")
 					local hueSelector = huePicker:FindFirstChild("Selector")
 					local colorSelector = colorPicker:FindFirstChild("Selector")			
-
+	
 					if colorPicker and huePicker then
 						local function updateColorGradient(hue)
 							local colorGradient = colorPicker:FindFirstChild("UIGradient")
@@ -3326,11 +3326,11 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 								})
 							end
 						end
-
+	
 						updatePickerVisuals = function()
 							local hue, saturation, value = default:ToHSV()
 							updateColorGradient(hue)
-
+	
 							local pickerSize = huePicker.AbsoluteSize
 							local selectorSize = hueSelector.AbsoluteSize
 							local relativeY = 1 - hue
@@ -3338,7 +3338,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							hueSelector.Position = UDim2.new(0.5, -selectorSize.X / 2, 0, yPos)
 							colorSelector.Position = UDim2.new(saturation, 0, 1 - value, 0)
 						end
-
+	
 						local function updateFromColorPicker(input)
 							local pickerSize = colorPicker.AbsoluteSize
 							local pickerPosition = colorPicker.AbsolutePosition
@@ -3347,45 +3347,45 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							local relativeY = (mousePosition.Y - pickerPosition.Y) / pickerSize.Y
 							relativeX = math.clamp(relativeX, 0, 1)
 							relativeY = math.clamp(relativeY, 0, 1)
-
+	
 							local hue, _, _ = default:ToHSV()
 							local saturation = relativeX
 							local value = 1 - relativeY
-
+	
 							default = Color3.fromHSV(hue, saturation, value)
-
+	
 							updateColorDisplay()
 							updateRGBInputs()
 							updateHexInput()
 							callback(default)
-
+	
 							colorSelector.Position = UDim2.new(relativeX, 0, relativeY, 0)
 						end
-
+	
 						local function updateFromHuePicker(input)
 							local pickerSize = huePicker.AbsoluteSize
 							local pickerPosition = huePicker.AbsolutePosition
 							local mousePosition = input.Position
 							local relativeY = (mousePosition.Y - pickerPosition.Y) / pickerSize.Y
 							relativeY = math.clamp(relativeY, 0, 1)
-
+	
 							local hue = 1 - relativeY
 							local _, saturation, value = default:ToHSV()
-
+	
 							default = Color3.fromHSV(hue, saturation, value)
-
+	
 							updateColorDisplay()
 							updateRGBInputs()
 							updateHexInput()
 							callback(default)
-
+	
 							updateColorGradient(hue)
-
+	
 							local selectorSize = hueSelector.AbsoluteSize
 							local yPos = math.clamp(relativeY * pickerSize.Y - selectorSize.Y / 2, 0, pickerSize.Y - selectorSize.Y)
 							hueSelector.Position = UDim2.new(0.5, -selectorSize.X / 2, 0, yPos)
 						end
-
+	
 						colorPicker.InputBegan:Connect(function(input)
 							if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 								isInteractingWithColor = true
@@ -3404,7 +3404,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 								end)
 							end
 						end)
-
+	
 						huePicker.InputBegan:Connect(function(input)
 							if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 								isInteractingWithColor = true
@@ -3423,10 +3423,10 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 								end)
 							end
 						end)
-
+	
 						updatePickerVisuals()
 					end
-
+	
 					local colorPickerControl = {
 						Instance = newColorPicker,
 						GetColor = function() return default end,
@@ -3439,7 +3439,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end
 					}
 					table.insert(AllColorPickers, colorPickerControl)
-
+	
 					return newColorPicker
 				end
 
@@ -3516,20 +3516,20 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							local totalHeight = 0
 							local children = newFrame:GetChildren()
 							local guiChildren = {}
-
+							
 							for _, child in ipairs(children) do
 								if child:IsA("GuiObject") and child.Visible and child.Name:find("Text_") then
 									table.insert(guiChildren, child)
 								end
 							end
-
+							
 							for i, child in ipairs(guiChildren) do
 								totalHeight = totalHeight + child.AbsoluteSize.Y
 								if i < #guiChildren then
 									totalHeight = totalHeight + 5
 								end
 							end
-
+							
 							if totalHeight > 0 then
 								newFrame.Size = UDim2.new(0, sizeX, 0, totalHeight + 40)
 							end
@@ -3541,13 +3541,13 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							local children = newFrame:GetChildren()
 							local guiChildren = {}
 							local currentY = 30
-
+							
 							for _, child in ipairs(children) do
 								if child:IsA("GuiObject") and child.Visible and child.Name:find("Text_") then
 									table.insert(guiChildren, child)
 								end
 							end
-
+							
 							for i, child in ipairs(guiChildren) do
 								child.Position = UDim2.new(0, 5, 0, currentY)
 								currentY = currentY + child.AbsoluteSize.Y + 5
@@ -3605,11 +3605,11 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end,
 						AddText = function(text, options)
 							if not newFrame or not newFrame.Parent then return nil end
-
+							
 							if type(text) == "table" then
 								text = "Invalid text parameter"
 							end
-
+							
 							options = options or {}
 							local textLabel = Instance.new("TextLabel")
 							textLabel.Name = "Text_" .. tostring(math.random(100000, 999999))
@@ -3624,19 +3624,19 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 							textLabel.TextYAlignment = options.TextYAlignment or Enum.TextYAlignment.Center
 							textLabel.Visible = options.Visible ~= false
 							textLabel.Parent = newFrame
-
+							
 							local function updateText()
 								positionTextElements()
 								updateFrameSize()
 							end
-
+							
 							textLabel:GetPropertyChangedSignal("Text"):Connect(updateText)
 							textLabel:GetPropertyChangedSignal("Visible"):Connect(updateText)
 							textLabel:GetPropertyChangedSignal("TextSize"):Connect(updateText)
-
+							
 							game:GetService("RunService").Heartbeat:Wait()
 							updateText()
-
+							
 							return textLabel
 						end,
 						Destroy = function() 
@@ -3655,7 +3655,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 
 				return wrappedSection
 			end,
-
+	
 			UnloadCheat = function()
 				for _, toggle in ipairs(AllToggles) do
 					if toggle.isOn() then
@@ -3664,20 +3664,20 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 				end
 				Elements.Window.Parent:Destroy()
 			end,
-
+	
 			CreateDefaultSettings = function(self)
 				local settingsTab = self:AddTab("Settings")
 				local setting_menu_section = self:AddSection("Menu", "left", settingsTab)
 				local setting_themes_section = self:AddSection("Themes", "left", settingsTab)
 				local setting_configs_section = self:AddSection("Configs", "right", settingsTab)
-
+	
 				setting_menu_section:AddButton({
 					Text = "Unload Riftcore",
 					Callback = function(state)
 						self:UnloadCheat()
 					end
 				})
-
+	
 				setting_menu_section:AddText({"Menu Keybind"}):AddKeybind({
 					Text = "",
 					Default = "RightShift", 
@@ -3686,7 +3686,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						Elements.Window.Visible = state
 					end
 				})
-
+	
 				setting_themes_section:AddText({"Background Color"}):AddColorPicker({
 					Text = "Color",
 					Default = Color3.fromRGB(255, 255, 255),
@@ -3694,8 +3694,8 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						print("Selected color:", color)
 					end
 				})
-
-
+	
+	
 				setting_themes_section:AddText({"Accent color"}):AddColorPicker({
 					Text = "Color",
 					Default = Color3.fromRGB(255, 255, 255),
@@ -3703,7 +3703,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						print("Selected color:", color)
 					end
 				})
-
+	
 				setting_themes_section:AddText({"Font color"}):AddColorPicker({
 					Text = "Color",
 					Default = Color3.fromRGB(255, 255, 255),
@@ -3711,7 +3711,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						print("Selected color:", color)
 					end
 				})
-
+	
 				setting_themes_section:AddInput({
 					Default = '--',
 					Numeric = false,
@@ -3722,7 +3722,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						print(state)
 					end
 				})
-
+	
 				setting_themes_section:AddDropdown({
 					Values = { "1", "2", "3", "4", "5" }, 
 					Default = "",
@@ -3732,28 +3732,28 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						print(state)
 					end
 				})
-
+	
 				setting_themes_section:AddButton({
 					Text = "Save theme",
 					Callback = function(state)
 						print("Save theme clicked!")
 					end
 				})
-
+	
 				setting_themes_section:AddButton({
 					Text = "Load theme",
 					Callback = function(state)
 						print("Load theme clicked!")
 					end
 				})
-
+	
 				setting_themes_section:AddButton({
 					Text = "Set as default",
 					Callback = function(state)
 						print("Set as default clicked!")
 					end
 				})
-
+	
 				local currentConfigName = ""
 				local configNameInput = setting_configs_section:AddInput({
 					Default = '--',
@@ -3766,21 +3766,21 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						print("Config name: " .. state)
 					end
 				})
-
+	
 				local configDropdown = setting_configs_section:AddDropdown({
-					Values = getConfigs(),
-					Default = "",
-					Multi = false,
-					Text = "Config list",
-					Callback = function(state)
-						SelectedConfigName = state[1] or ""
-						print("Selected config: " .. tostring(SelectedConfigName))
-					end
-				})
-
+                    Values = getConfigs(),
+                    Default = "",
+                    Multi = false,
+                    Text = "Config list",
+                    Callback = function(state)
+                        SelectedConfigName = state[1] or ""
+                        print("Selected config: " .. tostring(SelectedConfigName))
+                    end
+                })
+				
 				-- Store the dropdown control object, not the Frame
 				ConfigDropdowns.configList = configDropdown                
-
+		
 				setting_configs_section:AddButton({
 					Text = "Create config",
 					Callback = function(state)
@@ -3796,14 +3796,14 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						SaveConfig(configName)
 					end
 				})
-
+	
 				setting_configs_section:AddButton({
 					Text = "Load config",
 					Callback = function(state)
 						LoadConfig(SelectedConfigName)
 					end
 				})
-
+	
 				setting_configs_section:AddButton({
 					Text = "Overwrite config",
 					Callback = function(state)
@@ -3815,7 +3815,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end
 					end
 				})
-
+	
 				setting_configs_section:AddButton({
 					Text = "Delete config",
 					Callback = function(state)
@@ -3833,7 +3833,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end
 					end
 				})
-
+	
 				setting_configs_section:AddButton({
 					Text = "Set as autoload",
 					Callback = function(state)
@@ -3853,18 +3853,17 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 						end
 					end
 				})
-
+	
 				return settingsTab
 			end
 		}
 	end
-
-	-- Load autoload config if it exists
+	
 	local function LoadAutoloadConfig()
 		local success, autoloadName = pcall(function()
 			return readfile("Dopamine/autoload.txt")
 		end)
-
+		
 		if success and autoloadName and autoloadName ~= "" then
 			local autoloadConfig = LoadConfigFromFile(autoloadName)
 			if autoloadConfig then
@@ -3875,7 +3874,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 			end
 		end
 	end
-
+	
 	spawn(function()
 		wait(1)
 		LoadAutoloadConfig()
