@@ -194,7 +194,7 @@ Converted["_Riftcore"].IgnoreGuiInset = true
 Converted["_Riftcore"].ScreenInsets = Enum.ScreenInsets.DeviceSafeInsets
 Converted["_Riftcore"].ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 Converted["_Riftcore"].Name = "Riftcore"
-Converted["_Riftcore"].Parent = game.Players.LocalPlayer.PlayerGui
+Converted["_Riftcore"].Parent = game:GetService("CoreGui")
 
 Converted["_Main"].BackgroundColor3 = Color3.fromRGB(8.000000473111868, 8.000000473111868, 8.000000473111868)
 Converted["_Main"].BorderColor3 = Color3.fromRGB(8.000000473111868, 8.000000473111868, 8.000000473111868)
