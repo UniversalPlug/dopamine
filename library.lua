@@ -1,13 +1,5 @@
--- Generated using RoadToGlory's Converter v1.1 (RoadToGlory#9879)
-
--- Instances:
-writefile = function(...)
-	print("writefile called with args:", ...)
-	return false
-end
-listfiles = function(...)
-	print("listfiles called with args:", ...)
-	return false
+if not writefile and not listfiles then 
+	print("Configs not supported")
 end
 
 local Converted = {
@@ -188,13 +180,11 @@ local Converted = {
 	["_UICorner11"] = Instance.new("UICorner");
 }
 
--- Properties:
-
 Converted["_Riftcore"].IgnoreGuiInset = true
 Converted["_Riftcore"].ScreenInsets = Enum.ScreenInsets.DeviceSafeInsets
 Converted["_Riftcore"].ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 Converted["_Riftcore"].Name = "Riftcore"
-Converted["_Riftcore"].Parent = game.Players.LocalPlayer.PlayerGui
+Converted["_Riftcore"].Parent = game:GetService("CoreGui")
 
 Converted["_Main"].BackgroundColor3 = Color3.fromRGB(8.000000473111868, 8.000000473111868, 8.000000473111868)
 Converted["_Main"].BorderColor3 = Color3.fromRGB(8.000000473111868, 8.000000473111868, 8.000000473111868)
