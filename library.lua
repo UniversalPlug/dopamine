@@ -3883,7 +3883,7 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 				titleLabel.Size = UDim2.new(1, -20, 1, 0)
 				titleLabel.Position = UDim2.new(0, 10, 0, 0)
 				titleLabel.BackgroundTransparency = 1
-				titleLabel.Text = title
+				titleLabel.Text = tostring(title or "Notification")
 				titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 				titleLabel.TextScaled = true
 				titleLabel.Font = Enum.Font.Gotham
