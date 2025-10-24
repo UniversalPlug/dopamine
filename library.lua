@@ -3855,6 +3855,70 @@ local function ZGJC_fake_script() -- Fake Script: StarterGui.Riftcore.UIHandler
 				})
 	
 				return settingsTab
+			end,
+
+			Notify = function(title, lifetime)
+				local TweenService = game:GetService("TweenService")
+				
+				local notification = Instance.new("Frame")
+				notification.Name = "Notification"
+				notification.Size = UDim2.new(0, 300, 0, 50)
+				notification.Position = UDim2.new(0.5, -150, 0.1, 0)
+				notification.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+				notification.BorderSizePixel = 0
+				notification.ZIndex = 10000
+				notification.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+				
+				local corner = Instance.new("UICorner")
+				corner.CornerRadius = UDim.new(0, 8)
+				corner.Parent = notification
+				
+				local stroke = Instance.new("UIStroke")
+				stroke.Color = Color3.fromRGB(120, 167, 255)
+				stroke.Thickness = 1
+				stroke.Parent = notification
+				
+				local titleLabel = Instance.new("TextLabel")
+				titleLabel.Name = "Title"
+				titleLabel.Size = UDim2.new(1, -20, 1, 0)
+				titleLabel.Position = UDim2.new(0, 10, 0, 0)
+				titleLabel.BackgroundTransparency = 1
+				titleLabel.Text = title
+				titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+				titleLabel.TextScaled = true
+				titleLabel.Font = Enum.Font.Gotham
+				titleLabel.Parent = notification
+				
+				local fadeIn = TweenService:Create(notification, 
+					TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), 
+					{BackgroundTransparency = 0}
+				)
+				fadeIn:Play()
+				
+				local slideIn = TweenService:Create(notification, 
+					TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), 
+					{Position = UDim2.new(0.5, -150, 0.1, 0)}
+				)
+				slideIn:Play()
+				
+				local displayTime = lifetime or 2
+				
+				task.wait(displayTime)
+				
+				local fadeOut = TweenService:Create(notification, 
+					TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), 
+					{BackgroundTransparency = 1}
+				)
+				fadeOut:Play()
+				
+				local slideOut = TweenService:Create(notification, 
+					TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), 
+					{Position = UDim2.new(0.5, -150, -0.1, 0)}
+				)
+				slideOut:Play()
+				
+				task.wait(0.3)
+				notification:Destroy()
 			end
 		}
 	end
